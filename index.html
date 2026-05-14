@@ -1,142 +1,110 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>라온해 - Raonhae</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: 'HSJandari';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HSJandari-Regular.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raonhae Studio Summer Archive</title>
+  <meta name="description" content="A digital archive capturing the endless summer, preserving fleeting moments in a timeless editorial space.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">라온해</div>
-            <ul class="nav-links">
-                <li><a href="index.html#memory">Memory</a></li>
-                <li><a href="index.html#concept">Concept</a></li>
-                <li><a href="index.html#archive" class="active">Archive</a></li>
-                <li><a href="team.html">Team</a></li>
-                <li><a href="index.html#connect">Connect</a></li>
-            </ul>
-            <div class="profile-btn">
-                <img src="assets/01d78908500e043e90fac77184f671c2a3b2f131.svg" alt="Profile">
-            </div>
+  <header class="header">
+    <div class="header-container">
+      <div class="header-left">
+        <a href="#" class="logo">라온해</a>
+        <nav class="nav">
+          <a href="#work" class="nav-link active">Work</a>
+          <a href="#process" class="nav-link">Process</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="team.html" class="nav-link">Team</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+      <a href="#" class="btn btn-primary">Start a Project</a>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="hero-section fade-up">
+      <img class="hero-bg" src="http://localhost:3845/assets/3ffc01a58390dfa214ecbc5f651ad9a63b28182a.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=1600&q=80';" alt="Serene summer beach scene">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">영원히 끝나지 않을<br>여름방학, 그 찬란한 유영의 기록</h1>
+        <p class="hero-desc">A digital archive capturing the endless summer, preserving<br>fleeting moments in a timeless editorial space.</p>
+      </div>
+    </section>
+
+    <section id="about" class="question-section section-container">
+      <div class="question-grid">
+        <div class="question-text fade-up">
+          <span class="eyebrow">The Question</span>
+          <h2 class="section-title">빠르게 소비되고 사라지는<br>디지털 콘텐츠의 공허함</h2>
+          <p class="section-desc">We scroll, we double-tap, we forget. In an era of<br>infinite feeds and ephemeral stories, the true<br>weight of a memory is often lost in the digital<br>noise. How do we reclaim the value of a moment?</p>
         </div>
-    </nav>
-
-    <header class="hero">
-        <div class="hero-bg">
-            <img src="assets/a88a77a8621d6f0034ea283748a5d81a8cee411e.png" alt="Hero Background">
-            <div class="hero-overlay"></div>
+        <div class="question-image-wrapper fade-up">
+          <img src="http://localhost:3845/assets/8ab4ac0df57eba882fb9a564931a4f2b0689d201.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80';" alt="Abstract blurred motion" class="question-image">
         </div>
-        <div class="hero-content">
-            <h1 class="hero-title">영원히 끝나지 않을 여름방학,<br>그 찬란한 유영의 기록</h1>
+      </div>
+    </section>
+
+    <section id="process" class="approach-section section-container">
+      <div class="approach-text fade-up">
+        <span class="eyebrow">Our Approach</span>
+        <h2 class="section-title">소장 가치 있는 디지털 기록</h2>
+        <p class="section-desc">Transcending the browser frame to create an<br>immersive, editorial experience. A space where your<br>digital footprints are treated like a curated summer exhibition.</p>
+      </div>
+      <div class="approach-image-wrapper fade-up">
+        <img src="http://localhost:3845/assets/d026fadd2a877d48952b2bdc48d79fc8ed0a344a.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80';" alt="Immersive summer landscape" class="approach-image">
+      </div>
+    </section>
+
+    <section id="work" class="features-section section-container">
+      <div class="features-grid">
+        <div class="feature-card nostalgia fade-up">
+          <div class="feature-image-wrapper nostalgia-wrapper">
+            <img src="http://localhost:3845/assets/395b437d7d892a51a7c1db3f23e04cdcfb257290.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516100585641-f623fb94b293?w=800&q=80';" alt="Nostalgia" class="feature-image">
+          </div>
+          <h3 class="feature-title">Nostalgia</h3>
+          <p class="feature-desc">Curation that feels like flipping through a beloved<br>magazine or a faded photo album from childhood<br>summers.</p>
+          <a href="#" class="btn-text">Explore</a>
         </div>
-    </header>
-
-    <main>
-        <section class="concept-section" id="concept">
-            <div class="concept-images">
-                <img src="assets/2a6488eec6d44b9fc6bb8b5949f3eaa983549ffa.png" alt="Concept 1" class="img-1">
-                <img src="assets/ed028be7a8d6a1eb6e5fb79671bec9003bc5aef0.png" alt="Concept 2" class="img-2">
-                <div class="img-3-wrapper">
-                    <img src="assets/8c4c92970805c58f7ee122984a540a96c754a799.png" alt="Concept 3" class="img-3">
-                </div>
-            </div>
-            <div class="concept-text">
-                <h2>흩어지는 순간들 사이에서</h2>
-                <p>In an era of fleeting feeds, true emotional connections get lost in the noise. We needed a space that feels permanent, like holding a cherished photograph or a mixed tape from a bygone summer.</p>
-                <p>Raonhae weaves glassmorphism with analog textures, creating a protective envelope for your most treasured narratives, ensuring they endure with the clarity and weight of cinematic film.</p>
-            </div>
-        </section>
-
-        <section class="analog-section" id="memory">
-            <div class="analog-bg">
-                <img src="assets/93250caeebe2432bdfb429e813a6180be0e8bc0b.png" alt="Analog Background">
-            </div>
-            <div class="analog-header">
-                <h2>손에 닿는 듯한 아날로그 순간</h2>
-                <p>Crafted intentionally to slow down time and focus on sensation.</p>
-            </div>
-            <div class="cards-container">
-                <div class="card">
-                    <h3>Nostalgia</h3>
-                    <p>Subtle grain overlays and muted tones evoke the bittersweet feeling of looking back on fleeting memories.</p>
-                </div>
-                <div class="card">
-                    <h3>Afterglow</h3>
-                    <p>Soft grain overlays and faded tones preserve the lingering warmth of moments that quietly stay with you.</p>
-                </div>
-                <div class="card">
-                    <h3>Dreamlike</h3>
-                    <p>Soft blurs, glowing light, and airy textures recreate the feeling of drifting through a distant memory.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="archive-section" id="archive">
-            <div class="section-divider">
-                <span>Archive.</span>
-            </div>
-            
-            <div class="archive-list">
-                <div class="archive-item item-1">
-                    <div class="archive-text">
-                        <div class="archive-number">01</div>
-                        <h3>Summer Breeze Vol. 1</h3>
-                        <p>A collection of moments captured under the<br>afternoon sun, filtering through green leaves.</p>
-                    </div>
-                    <div class="archive-item-images">
-                        <img src="assets/3010f9716352eeddb6e131f72a4db2163f5b990e.png" alt="Vol 1 Img 1" class="vol-img-1">
-                        <img src="assets/144b2e1e6d943955546a42b76377a0bce707e5df.png" alt="Vol 1 Img 2" class="vol-img-2">
-                    </div>
-                </div>
-
-                <div class="archive-item item-2">
-                    <div class="archive-item-images">
-                        <img src="assets/9d2ec45d87e1afefcc843fa6d82508e0d377b898.png" alt="Vol 2 Img 1" class="vol-img-3">
-                        <img src="assets/162c1a82ca5e3ae66c3b9b6e92214ef3caeb9ac5.png" alt="Vol 2 Img 2" class="vol-img-4">
-                    </div>
-                    <div class="archive-text">
-                        <div class="archive-number">02</div>
-                        <h3>Summer Breeze Vol. 1</h3>
-                        <p>A collection of moments captured under the<br>afternoon sun, filtering through green leaves.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section" id="connect">
-            <h2>우리의 여름을 시작하며, 가장 찬란했던 계절로</h2>
-            <p>Step into a curated space where your narrative is preserved with cinematic care.</p>
-            <button class="cta-button">Start Project</button>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-logo">라온해</div>
-            <div class="footer-copy">© Raonhae. Captured in the light of an endless summer.</div>
-            <div class="footer-links">
-                <a href="#">Instagram</a>
-                <a href="#">Twitter</a>
-                <a href="#">Contact</a>
-            </div>
+        
+        <div class="feature-card immersion fade-up" style="animation-delay: 0.2s;">
+          <div class="feature-image-wrapper immersion-wrapper">
+            <img src="http://localhost:3845/assets/134eb6b1a8342af6f559b7183989bf15086f3aa2.png" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523730205978-59fd1b2965e3?w=800&q=80';" alt="Immersion & Permanence" class="feature-image">
+          </div>
+          <h3 class="feature-title">Immersion & Permanence</h3>
+          <p class="feature-desc">Uninterrupted reading experiences with generous<br>white space. A digital home built to last, preserving<br>your narrative away from algorithmic feeds.</p>
+          <a href="#" class="btn-text">Experience</a>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <script src="script.js"></script>
+    <section id="contact" class="cta-section fade-up">
+      <div class="cta-container">
+        <h2 class="cta-title">당신의 찰나를 영원으로 기록하세요.</h2>
+        <p class="cta-desc">Begin crafting your own summer archive. A quiet space<br>amidst the noise.</p>
+        <a href="#" class="btn btn-primary">Start a Project</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <p>© 2026 Raonhae Studio. Summer Editional Archive.</p>
+      </div>
+      <div class="footer-right">
+        <a href="#" class="footer-link">Instagram</a>
+        <a href="#" class="footer-link">Behance</a>
+        <a href="#" class="footer-link">LinkedIn</a>
+        <a href="#" class="footer-link">Privacy</a>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="script.js"></script>
 </body>
 </html>
