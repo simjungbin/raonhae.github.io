@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root {
     --primary-color: #81dbe3;
     --text-dark: #161d18;
@@ -799,6 +801,12 @@ a {
     margin-top: 16px;
 }
 
+.product-hero-link img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
 /* Product Intro */
 .product-main {
     background: #fff;
@@ -889,6 +897,12 @@ a {
     width: 64px;
     height: 64px;
     margin-bottom: 8px;
+}
+
+.feature-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .feature-card h4 {
@@ -1043,6 +1057,12 @@ a {
     color: #72cbd7;
     padding: 16px;
     border-bottom: 1px solid #72cbd7;
+}
+
+.btn-secondary img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
 }
 
 /* Responsive adjustments */
