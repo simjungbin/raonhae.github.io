@@ -897,6 +897,8 @@ a {
     width: 64px;
     height: 64px;
     margin-bottom: 8px;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
 }
 
 .feature-icon img {
