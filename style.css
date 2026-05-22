@@ -1,14 +1,12 @@
-<<<<<<< Updated upstream
 @charset "UTF-8";
-=======
+
 @font-face {
     font-family: 'HSJandari';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2510-2@1.0/HSJandari.woff2') format('woff2'),
-         url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HSJandari-Regular.woff') format('woff');
+    src: url('assets/HSJandari-Regular.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/projectnoonnu/2510-2@1.0/HSJandari.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
->>>>>>> Stashed changes
 
 :root {
     --primary-color: #81dbe3;
