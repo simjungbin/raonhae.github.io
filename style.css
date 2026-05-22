@@ -802,9 +802,10 @@ a {
 }
 
 .product-hero-link img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
 }
 
 /* Product Intro */
@@ -894,17 +895,16 @@ a {
 }
 
 .feature-icon {
-    width: 64px;
-    height: 64px;
+    width: 52px;
+    height: 52px;
     margin-bottom: 8px;
     flex-shrink: 0;
-    aspect-ratio: 1 / 1;
 }
 
 .feature-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    display: block;
+    width: 52px;
+    height: 52px;
 }
 
 .feature-card h4 {
@@ -1062,9 +1062,10 @@ a {
 }
 
 .btn-secondary img {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 /* Responsive adjustments */
