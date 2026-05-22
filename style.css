@@ -792,9 +792,9 @@ a {
 }
 
 .product-hero-title {
-    font-family: var(--font-body);
+    font-family: var(--font-heading);
     font-size: 64px;
-    font-weight: 200;
+    font-weight: normal;
     line-height: 1.2;
     letter-spacing: -0.64px;
 }
@@ -1032,10 +1032,10 @@ a {
 }
 
 .cta-text h2 {
-    font-family: var(--font-body);
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-weight: normal;
     font-size: 36px;
-    color: #3299aa;
+    color: var(--primary-color);
     line-height: 1.2;
     margin-bottom: 24px;
 }
@@ -1043,7 +1043,7 @@ a {
 .cta-text p {
     font-weight: 500;
     font-size: 16px;
-    color: #3299aa;
+    color: var(--primary-color);
     line-height: 1.6;
 }
 
@@ -1056,7 +1056,7 @@ a {
 }
 
 .btn-primary {
-    background: #72cbd7;
+    background: var(--primary-color);
     color: white;
     font-weight: bold;
     font-size: 16px;
@@ -1072,9 +1072,9 @@ a {
     align-items: center;
     font-weight: bold;
     font-size: 16px;
-    color: #72cbd7;
+    color: var(--primary-color);
     padding: 16px;
-    border-bottom: 1px solid #72cbd7;
+    border-bottom: 1px solid var(--primary-color);
 }
 
 .btn-secondary img {
