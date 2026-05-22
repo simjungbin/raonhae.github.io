@@ -1,4 +1,14 @@
+<<<<<<< Updated upstream
 @charset "UTF-8";
+=======
+@font-face {
+    font-family: 'HSJandari';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2510-2@1.0/HSJandari.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HSJandari-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+>>>>>>> Stashed changes
 
 :root {
     --primary-color: #81dbe3;
@@ -157,8 +167,9 @@ a {
 }
 
 .hero-title {
+    font-family: var(--font-heading);
     font-size: 64px;
-    font-weight: 200;
+    font-weight: normal;
     line-height: 1.3;
     text-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
@@ -245,6 +256,8 @@ a {
 }
 
 .concept-text h2 {
+    font-family: var(--font-heading);
+    font-weight: normal;
     font-size: 36px;
     color: var(--text-dark);
     letter-spacing: -0.27px;
@@ -284,6 +297,8 @@ a {
 }
 
 .analog-header h2 {
+    font-family: var(--font-heading);
+    font-weight: normal;
     font-size: 36px;
     color: var(--primary-color);
     letter-spacing: -0.22px;
@@ -382,7 +397,8 @@ a {
 }
 
 .archive-number {
-    font-family: var(--font-number);
+    font-family: var(--font-heading);
+    font-weight: normal;
     font-size: 35px;
     color: #d9f4f7;
     margin-bottom: 5px;
@@ -455,6 +471,8 @@ a {
 }
 
 .cta-section h2 {
+    font-family: var(--font-heading);
+    font-weight: normal;
     font-size: 24px;
     color: var(--primary-color);
     margin-bottom: 15px;
