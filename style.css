@@ -16,7 +16,7 @@
     --bg-tint: rgba(129, 219, 227, 0.3);
     
     --font-heading: 'HSJandari', sans-serif;
-    --font-body: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+    --font-body: 'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', sans-serif;
     --font-en: 'Be Vietnam Pro', sans-serif;
     --font-number: 'Noto Serif', serif;
 }
