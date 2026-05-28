@@ -221,12 +221,22 @@ a {
     height: 500px;
 }
 
-.concept-images img {
+.concept-images img:not(.img-3) {
     position: absolute;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    /* Blur Reveal parameters */
+    --duration: 1.2s;
+    --max-blur: 4px;
+    
+    filter: blur(var(--max-blur));
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter var(--duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.concept-images img:not(.img-3):hover {
+    filter: blur(0px);
 }
 
 .img-1 {
@@ -256,6 +266,17 @@ a {
     z-index: 3;
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    
+    /* Blur Reveal parameters */
+    --duration: 1.2s;
+    --max-blur: 4px;
+    
+    filter: blur(var(--max-blur));
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter var(--duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.img-3-wrapper:hover {
+    filter: blur(0px);
 }
 
 .img-3-wrapper::before {
@@ -264,11 +285,17 @@ a {
     inset: 0;
     backdrop-filter: blur(4px);
     z-index: 1;
+    transition: backdrop-filter 0.5s ease;
+}
+
+.img-3-wrapper:hover::before {
+    backdrop-filter: blur(0px);
 }
 
 .img-3 {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     position: static;
     z-index: 0;
 }
@@ -276,6 +303,18 @@ a {
 .concept-images:hover .img-1 { transform: translate(-10px, -10px); }
 .concept-images:hover .img-2 { transform: translate(0, -20px); }
 .concept-images:hover .img-3-wrapper { transform: translate(10px, -10px); }
+
+@media (prefers-reduced-motion: reduce) {
+    .concept-images img:not(.img-3),
+    .img-3-wrapper {
+        filter: none !important;
+        transition: none !important;
+    }
+    .img-3-wrapper::before {
+        backdrop-filter: none !important;
+        transition: none !important;
+    }
+}
 
 
 .concept-text {
