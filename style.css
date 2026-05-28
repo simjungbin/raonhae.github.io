@@ -134,10 +134,17 @@ a {
     z-index: -1;
 }
 
-.hero-bg img {
+.hero-bg img,
+.hero-bg video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hero-bg img {
     filter: blur(1px); /* Slight blur to match backdrop-blur in design */
 }
 
@@ -756,6 +763,9 @@ a {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .product-hero-overlay {
