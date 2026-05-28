@@ -365,7 +365,7 @@ a {
 
 .analog-header h2 {
     font-size: 36px;
-    color: var(--primary-color);
+    color: var(--text-dark);
     letter-spacing: -0.22px;
     margin-bottom: 16px;
 }
