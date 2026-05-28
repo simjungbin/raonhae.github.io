@@ -394,16 +394,18 @@ a {
     gap: 20px;
     border-radius: 4px;
     transition: transform 0.3s ease, background 0.3s ease;
+    border: 1px solid var(--cyan, #81DBE3);
+    background: rgba(129, 219, 227, 0.10);
 }
 
 .card:hover {
     transform: translateY(-5px);
-    background: rgba(129, 219, 227, 0.4);
+    background: rgba(129, 219, 227, 0.2);
 }
 
 .card h3 {
     font-size: 36px;
-    color: white;
+    color: #81DBE3;
 }
 
 .card p {
