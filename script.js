@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Parallax effect for hero image
+    // Parallax effect for hero image/video
     window.addEventListener('scroll', () => {
         const scrolled = window.scrollY;
-        const heroBg = document.querySelector('.hero-bg img');
+        const heroBg = document.querySelector('.hero-bg img, .hero-bg video');
         if (heroBg) {
             heroBg.style.transform = `translateY(${scrolled * 0.3}px)`;
         }
@@ -68,4 +68,70 @@ document.addEventListener("DOMContentLoaded", () => {
             observer.observe(el);
         });
     });
+
+    // Typewriter effect initialization
+    const typewriterContainer = document.getElementById('typewriter');
+    if (typewriterContainer) {
+        const textTarget = typewriterContainer.querySelector('.typewriter-text');
+        const fullText = typewriterContainer.getAttribute('data-text') || '';
+        
+        const getParam = (styleName, fallback) => {
+            const value = getComputedStyle(typewriterContainer).getPropertyValue(styleName).trim();
+            return value ? parseInt(value, 10) : fallback;
+        };
+
+        const speed = getParam('--speed', 90);
+        const pause = getParam('--pause', 1400);
+
+        let currentIndex = 0;
+        let isDeleting = false;
+        let timeoutId = null;
+        let isElementVisible = false;
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            textTarget.textContent = fullText;
+        } else {
+            const handleTypewriter = () => {
+                if (!isElementVisible) return;
+
+                if (!isDeleting) {
+                    textTarget.textContent = fullText.slice(0, currentIndex + 1);
+                    currentIndex++;
+
+                    if (currentIndex === fullText.length) {
+                        isDeleting = true;
+                        timeoutId = setTimeout(handleTypewriter, pause);
+                    } else {
+                        timeoutId = setTimeout(handleTypewriter, speed);
+                    }
+                } else {
+                    textTarget.textContent = fullText.slice(0, currentIndex - 1);
+                    currentIndex--;
+
+                    if (currentIndex === 0) {
+                        isDeleting = false;
+                        timeoutId = setTimeout(handleTypewriter, speed * 3);
+                    } else {
+                        timeoutId = setTimeout(handleTypewriter, speed * 0.5);
+                    }
+                }
+            };
+
+            const typewriterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isElementVisible = entry.isIntersecting;
+                    if (isElementVisible) {
+                        clearTimeout(timeoutId);
+                        handleTypewriter();
+                    } else {
+                        clearTimeout(timeoutId);
+                    }
+                });
+            }, { threshold: 0.05 });
+
+            typewriterObserver.observe(typewriterContainer);
+        }
+    }
 });
