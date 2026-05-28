@@ -119,19 +119,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
-            const typewriterObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    isElementVisible = entry.isIntersecting;
-                    if (isElementVisible) {
-                        clearTimeout(timeoutId);
-                        handleTypewriter();
-                    } else {
-                        clearTimeout(timeoutId);
-                    }
-                });
-            }, { threshold: 0.05 });
+            const startObserver = () => {
+                const typewriterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        isElementVisible = entry.isIntersecting;
+                        if (isElementVisible) {
+                            clearTimeout(timeoutId);
+                            handleTypewriter();
+                        } else {
+                            clearTimeout(timeoutId);
+                        }
+                    });
+                }, { threshold: 0.05 });
 
-            typewriterObserver.observe(typewriterContainer);
+                typewriterObserver.observe(typewriterContainer);
+            };
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(startObserver);
+            } else {
+                startObserver();
+            }
         }
     }
 });
