@@ -1,5 +1,13 @@
 @charset "UTF-8";
 
+@font-face {
+    font-family: 'HSJandari';
+    src: url('assets/HSJandari-Regular.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/projectnoonnu/2510-2@1.0/HSJandari.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 :root {
     --primary-color: #81dbe3;
     --text-dark: #161d18;
@@ -170,6 +178,32 @@ a {
     text-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
+.typewriter-component {
+    --speed: 90ms;    /* 글자 타이핑 속도 */
+    --pause: 1400ms;  /* 문장 완성 후 대기 시간 */
+    --caret-color: #ffffff; /* 흰색 커서 */
+    word-break: keep-all; /* 한글 단어가 어색하게 쪼개져 줄바꿈되는 것 방지 */
+}
+
+.typewriter-text {
+    font-family: inherit;
+    border-right: 2px solid var(--caret-color, currentColor);
+    padding-right: 4px;
+    white-space: pre-wrap;
+    animation: caret-blink 0.8s step-end infinite;
+}
+
+@keyframes caret-blink {
+    from, to { border-color: transparent }
+    50% { border-color: var(--caret-color, currentColor); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .typewriter-text {
+        border-right: none !important;
+        animation: none !important;
+    }
+}
 /* Concept Section */
 .concept-section {
     max-width: 1280px;
