@@ -462,7 +462,7 @@ a {
 }
 
 .archive-number {
-    font-family: var(--font-number);
+    font-family: var(--font-heading);
     font-size: 35px;
     color: #d9f4f7;
     margin-bottom: 5px;
