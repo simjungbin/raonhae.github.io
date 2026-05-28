@@ -16,10 +16,6 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
 }
 
 * {
@@ -32,9 +28,6 @@ body {
     font-family: var(--font-body);
     color: var(--text-medium);
     background-color: #ffffff;
-    margin: 0;
-    padding: 0;
-    width: 100%;
     overflow-x: hidden;
 }
 
@@ -141,24 +134,18 @@ a {
     z-index: -1;
 }
 
-.hero-bg img {
+.hero-bg img,
+.hero-bg video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     position: absolute;
     top: 0;
     left: 0;
-    filter: blur(1px); /* Slight blur to match backdrop-blur in design */
 }
 
-.hero-bg video {
-    width: 101%;
-    height: 101%;
-    object-fit: cover;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.hero-bg img {
+    filter: blur(1px); /* Slight blur to match backdrop-blur in design */
 }
 
 .hero-overlay {
