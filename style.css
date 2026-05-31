@@ -1236,6 +1236,40 @@ a {
     flex-shrink: 0;
 }
 
+/* Premium Entrance Animations for CTA and Footer */
+.cta-text,
+.cta-actions,
+.footer-container {
+    will-change: transform, opacity;
+}
+
+.cta-text.fade-in-hidden,
+.cta-actions.fade-in-hidden,
+.footer-container.fade-in-hidden {
+    opacity: 0 !important;
+    transform: translateY(70px) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.cta-text.fade-in-visible,
+.cta-actions.fade-in-visible,
+.footer-container.fade-in-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Staggered Delay for CTA and Footer */
+.cta-text.fade-in-visible {
+    transition-delay: 0.2s !important;
+}
+.cta-actions.fade-in-visible {
+    transition-delay: 0.5s !important;
+}
+.footer-container.fade-in-visible {
+    transition-delay: 0.2s !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     .concept-section {

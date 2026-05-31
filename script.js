@@ -166,6 +166,61 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Special observer for product-cta section to start when 20-30% (25%) enters the viewport
+    const productCta = document.querySelector('.product-cta');
+    if (productCta) {
+        const ctaText = productCta.querySelector('.cta-text');
+        const ctaActions = productCta.querySelector('.cta-actions');
+        
+        if (ctaText && ctaActions) {
+            ctaText.classList.add('fade-in-hidden');
+            ctaActions.classList.add('fade-in-hidden');
+            
+            const ctaObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        ctaText.classList.remove('fade-in-hidden');
+                        ctaActions.classList.remove('fade-in-hidden');
+                        ctaText.classList.add('fade-in-visible');
+                        ctaActions.classList.add('fade-in-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
+            });
+            
+            ctaObserver.observe(productCta);
+        }
+    }
+
+    // Special observer for Footer section to start when it enters the viewport
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        const footerContainer = footer.querySelector('.footer-container');
+        if (footerContainer) {
+            footerContainer.classList.add('fade-in-hidden');
+            
+            const footerObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        footerContainer.classList.remove('fade-in-hidden');
+                        footerContainer.classList.add('fade-in-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1 // triggers quickly when footer starts to enter
+            });
+            
+            footerObserver.observe(footer);
+        }
+    }
+
     // Typewriter effect initialization
     const typewriterContainer = document.getElementById('typewriter');
     if (typewriterContainer) {
