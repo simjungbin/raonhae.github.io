@@ -94,8 +94,75 @@ document.addEventListener("DOMContentLoaded", () => {
                 rootMargin: '0px',
                 threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
             });
-            
             introObserver.observe(productIntro);
+        }
+    }
+
+    // Special observer for FEATURES section to start when 20-30% (25%) enters the viewport
+    const productFeatures = document.querySelector('.product-features');
+    if (productFeatures) {
+        const title = productFeatures.querySelector('.section-title');
+        const cards = productFeatures.querySelectorAll('.feature-card');
+        
+        if (title && cards.length > 0) {
+            title.classList.add('fade-in-hidden');
+            cards.forEach(card => card.classList.add('fade-in-hidden'));
+            
+            const featuresObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        title.classList.remove('fade-in-hidden');
+                        title.classList.add('fade-in-visible');
+                        
+                        cards.forEach(card => {
+                            card.classList.remove('fade-in-hidden');
+                            card.classList.add('fade-in-visible');
+                        });
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
+            });
+            
+            featuresObserver.observe(productFeatures);
+        }
+    }
+
+    // Special observer for WHAT'S INSIDE section to start when 20-30% (25%) enters the viewport
+    const productInside = document.querySelector('.product-inside');
+    if (productInside) {
+        const title = productInside.querySelector('.section-title');
+        const cards = productInside.querySelectorAll('.inside-card');
+        
+        if (title && cards.length > 0) {
+            title.classList.add('fade-in-hidden');
+            cards.forEach(card => card.classList.add('fade-in-hidden'));
+            
+            const insideObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        title.classList.remove('fade-in-hidden');
+                        title.classList.add('fade-in-visible');
+                        
+                        cards.forEach(card => {
+                            card.classList.remove('fade-in-hidden');
+                            card.classList.add('fade-in-visible');
+                        });
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
+            });
+            
+            insideObserver.observe(productInside);
         }
     }
 

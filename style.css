@@ -968,10 +968,47 @@ a {
     text-align: center;
     gap: 16px;
     border-left: 1px solid #fff; /* Simulated divider */
+    will-change: transform, opacity;
 }
 
 .feature-card:first-child {
     border-left: none;
+}
+
+/* Premium Entrance Animations for FEATURES Section */
+.product-features .section-title {
+    will-change: transform, opacity;
+}
+
+.product-features .section-title.fade-in-hidden,
+.feature-card.fade-in-hidden {
+    opacity: 0 !important;
+    transform: translateY(70px) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.product-features .section-title.fade-in-visible,
+.feature-card.fade-in-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Staggered Delay for FEATURES */
+.product-features .section-title.fade-in-visible {
+    transition-delay: 0.2s !important;
+}
+.features-grid .feature-card:nth-child(1).fade-in-visible {
+    transition-delay: 0.4s !important;
+}
+.features-grid .feature-card:nth-child(2).fade-in-visible {
+    transition-delay: 0.6s !important;
+}
+.features-grid .feature-card:nth-child(3).fade-in-visible {
+    transition-delay: 0.8s !important;
+}
+.features-grid .feature-card:nth-child(4).fade-in-visible {
+    transition-delay: 1.0s !important;
 }
 
 .feature-icon {
@@ -1023,6 +1060,46 @@ a {
     align-items: center;
     text-align: center;
     gap: 12px;
+    will-change: transform, opacity;
+}
+
+/* Premium Entrance Animations for WHAT'S INSIDE Section */
+.product-inside .section-title {
+    will-change: transform, opacity;
+}
+
+.product-inside .section-title.fade-in-hidden,
+.inside-card.fade-in-hidden {
+    opacity: 0 !important;
+    transform: translateY(70px) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.product-inside .section-title.fade-in-visible,
+.inside-card.fade-in-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Staggered Delay for WHAT'S INSIDE */
+.product-inside .section-title.fade-in-visible {
+    transition-delay: 0.2s !important;
+}
+.inside-grid .inside-card:nth-child(1).fade-in-visible {
+    transition-delay: 0.4s !important;
+}
+.inside-grid .inside-card:nth-child(2).fade-in-visible {
+    transition-delay: 0.6s !important;
+}
+.inside-grid .inside-card:nth-child(3).fade-in-visible {
+    transition-delay: 0.8s !important;
+}
+.inside-grid .inside-card:nth-child(4).fade-in-visible {
+    transition-delay: 1.0s !important;
+}
+.inside-grid .inside-card:nth-child(5).fade-in-visible {
+    transition-delay: 1.2s !important;
 }
 
 .inside-image {
