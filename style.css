@@ -640,7 +640,8 @@ a {
     z-index: -1;
 }
 
-.team-hero-bg img {
+.team-hero-bg img,
+.team-hero-bg video {
     width: 100%;
     height: 100%;
     object-fit: cover;
