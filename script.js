@@ -69,6 +69,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Special observer for product-intro section to start when 20-30% (25%) of it enters the viewport
+    const productIntro = document.querySelector('.product-intro');
+    if (productIntro) {
+        const introText = productIntro.querySelector('.product-intro-text');
+        const introImage = productIntro.querySelector('.product-intro-image');
+        
+        if (introText && introImage) {
+            introText.classList.add('fade-in-hidden');
+            introImage.classList.add('fade-in-hidden');
+            
+            const introObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        introText.classList.remove('fade-in-hidden');
+                        introImage.classList.remove('fade-in-hidden');
+                        introText.classList.add('fade-in-visible');
+                        introImage.classList.add('fade-in-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
+            });
+            
+            introObserver.observe(productIntro);
+        }
+    }
+
     // Typewriter effect initialization
     const typewriterContainer = document.getElementById('typewriter');
     if (typewriterContainer) {

@@ -878,6 +878,21 @@ a {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    will-change: transform, opacity;
+}
+
+/* Premium Scroll Entrance Animation Overrides */
+.product-intro-text.fade-in-hidden {
+    opacity: 0 !important;
+    transform: translateY(70px) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.product-intro-text.fade-in-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transition-delay: 0.2s !important;
 }
 
 .product-intro-text h2 {
@@ -895,6 +910,20 @@ a {
 
 .product-intro-image {
     flex: 1;
+    will-change: transform, opacity;
+}
+
+.product-intro-image.fade-in-hidden {
+    opacity: 0 !important;
+    transform: translateY(70px) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.product-intro-image.fade-in-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transition-delay: 0.5s !important;
 }
 
 .product-intro-image img {
