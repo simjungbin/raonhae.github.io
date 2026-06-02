@@ -132,6 +132,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Special observer for Video Showcase section
+    const productVideoShowcase = document.querySelector('.product-video-showcase');
+    if (productVideoShowcase) {
+        const videoContainer = productVideoShowcase.querySelector('.video-showcase-container');
+
+        if (videoContainer) {
+            videoContainer.classList.add('fade-in-hidden');
+
+            const videoObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        videoContainer.classList.remove('fade-in-hidden');
+                        videoContainer.classList.add('fade-in-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            });
+
+            videoObserver.observe(productVideoShowcase);
+        }
+    }
+
     // Special observer for WHAT'S INSIDE section to start when 20-30% (25%) enters the viewport
     const productInside = document.querySelector('.product-inside');
     if (productInside) {
