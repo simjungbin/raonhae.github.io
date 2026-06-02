@@ -135,28 +135,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Special observer for Video Showcase section
     const productVideoShowcase = document.querySelector('.product-video-showcase');
     if (productVideoShowcase) {
-        const videoContainer = productVideoShowcase.querySelector('.video-showcase-container');
+        productVideoShowcase.classList.add('fade-in-hidden');
 
-        if (videoContainer) {
-            videoContainer.classList.add('fade-in-hidden');
-
-            const videoObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        videoContainer.classList.remove('fade-in-hidden');
-                        videoContainer.classList.add('fade-in-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15
+        const videoObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    productVideoShowcase.classList.remove('fade-in-hidden');
+                    productVideoShowcase.classList.add('fade-in-visible');
+                    obs.unobserve(entry.target);
+                }
             });
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.12
+        });
 
-            videoObserver.observe(productVideoShowcase);
-        }
+        videoObserver.observe(productVideoShowcase);
     }
+
 
     // Special observer for WHAT'S INSIDE section to start when 20-30% (25%) enters the viewport
     const productInside = document.querySelector('.product-inside');

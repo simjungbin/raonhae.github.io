@@ -1038,54 +1038,92 @@ a {
     line-height: 1.4;
 }
 
-/* Product Video Showcase */
+/* Product Video Showcase — Marquee Infinite Scroll */
 .product-video-showcase {
-    padding: 60px 0 80px;
+    padding: 80px 0;
     background: #fff;
-}
-
-.video-showcase-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 40px;
+    overflow: hidden;
+    /* Scroll entrance animation */
     will-change: transform, opacity;
 }
 
-.showcase-video {
-    width: 100%;
-    display: block;
-    border-radius: 12px;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-}
-
-/* Scroll Entrance Animation for Video Showcase */
-.video-showcase-container.fade-in-hidden {
+.product-video-showcase.fade-in-hidden {
     opacity: 0 !important;
-    transform: translateY(70px) !important;
+    transform: translateY(60px) !important;
     transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-.video-showcase-container.fade-in-visible {
+.product-video-showcase.fade-in-visible {
     opacity: 1 !important;
     transform: translateY(0) !important;
     transition: opacity 1.8s cubic-bezier(0.22, 1, 0.36, 1), transform 1.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    transition-delay: 0.2s !important;
+    transition-delay: 0.15s !important;
 }
 
+/* Marquee outer wrapper: clips overflow */
+.video-marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Track scrolls continuously left; 4 items (2 videos × 2 sets).
+   Translate by 50% = exactly 2 item-widths → seamless loop */
+@keyframes videoMarquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.video-marquee-track {
+    display: flex;
+    gap: 24px;
+    /* Width = (item-width + gap) × 4; we animate by 50% which equals 2 items */
+    width: max-content;
+    animation: videoMarquee 28s linear infinite;
+    will-change: transform;
+}
+
+/* Pause animation when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .video-marquee-track {
+        animation: none;
+    }
+}
+
+.marquee-video-item {
+    flex-shrink: 0;
+    /* Each video is ~70vw on desktop (capped at 900px) for an immersive feel */
+    width: min(70vw, 900px);
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.marquee-video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Mobile: slightly wider cards, a touch faster */
 @media (max-width: 768px) {
     .product-video-showcase {
-        padding: 40px 0 60px;
+        padding: 60px 0;
     }
 
-    .video-showcase-container {
-        padding: 0 20px;
+    .video-marquee-track {
+        gap: 16px;
+        animation-duration: 22s;
     }
 
-    .showcase-video {
+    .marquee-video-item {
+        width: min(82vw, 480px);
         border-radius: 8px;
     }
 }
+
+
 
 /* Product Inside */
 

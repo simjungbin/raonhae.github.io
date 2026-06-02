@@ -100,15 +100,31 @@
         </section>
 
         <section class="product-video-showcase">
-            <div class="video-showcase-container">
-                <video
-                    class="showcase-video"
-                    src="assets/productvideo1.mp4"
-                    autoplay
-                    muted
-                    loop
-                    playsinline
-                ></video>
+            <div class="video-marquee-wrapper">
+                <div class="video-marquee-track">
+                    <!-- Set 1 -->
+                    <div class="marquee-video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="assets/productvideo1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="marquee-video-item">
+                        <video autoplay muted loop playsinline>
+                            <source src="assets/productvideo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <!-- Set 2 (duplicate for seamless loop) -->
+                    <div class="marquee-video-item" aria-hidden="true">
+                        <video autoplay muted loop playsinline>
+                            <source src="assets/productvideo1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="marquee-video-item" aria-hidden="true">
+                        <video autoplay muted loop playsinline>
+                            <source src="assets/productvideo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
             </div>
         </section>
 
