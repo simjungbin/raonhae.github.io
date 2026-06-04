@@ -321,21 +321,54 @@ a {
     width: 45%;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 40px;
+    align-items: flex-start;
+    padding-left: 20px;
+}
+
+.concept-header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.concept-label {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    color: var(--text-dark);
+    letter-spacing: -0.32px;
+    line-height: 1.2;
 }
 
 .concept-text h2 {
-    font-size: 36px;
+    font-size: 40px;
     color: var(--text-dark);
-    letter-spacing: -0.27px;
-    margin-bottom: 10px;
+    letter-spacing: -0.2696px;
+    line-height: 1.2;
+    margin-bottom: 0;
 }
 
-.concept-text p {
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text-medium);
+.concept-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.concept-body .highlight-text {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+.concept-body .description-text {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #516174;
 }
 
 /* Analog Section */
