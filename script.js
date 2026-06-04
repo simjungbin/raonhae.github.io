@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
         '.solution-image-wrapper',
         '.analog-header',
         '.card',
-        '.archive-item',
-        '.cta-section'
+        '.archive-intro',
+        '.archive-cta-banner'
     ];
 
     // Add initial styles dynamically so without JS things still show up
