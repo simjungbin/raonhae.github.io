@@ -266,30 +266,7 @@ a {
     z-index: 3;
     border: 1px solid rgba(255,255,255,0.3);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    
-    /* Blur Reveal parameters */
-    --duration: 1.2s;
-    --max-blur: 4px;
-    
-    filter: blur(var(--max-blur));
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter var(--duration) cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.img-3-wrapper:hover {
-    filter: blur(0px);
-}
-
-.img-3-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    backdrop-filter: blur(4px);
-    z-index: 1;
-    transition: backdrop-filter 0.5s ease;
-}
-
-.img-3-wrapper:hover::before {
-    backdrop-filter: blur(0px);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .img-3 {
