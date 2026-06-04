@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const elementsToAnimate = [
         '.concept-text', 
         '.concept-images',
+        '.solution-text',
+        '.solution-image-wrapper',
         '.analog-header',
         '.card',
         '.archive-item',
