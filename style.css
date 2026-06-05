@@ -602,7 +602,7 @@ a {
 
 .archive-cta-content h2 {
     font-size: 40px;
-    color: var(--text-dark);
+    color: #ffffff;
     letter-spacing: -0.184px;
     line-height: 1.4;
     font-family: var(--font-heading);
@@ -614,7 +614,7 @@ a {
     font-weight: 500;
     font-size: 14px;
     line-height: 1.4;
-    color: var(--text-dark);
+    color: #ffffff;
     margin-top: 0;
     margin-bottom: 0;
 }
