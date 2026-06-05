@@ -608,6 +608,7 @@ a {
     line-height: 1.4;
     font-family: var(--font-heading);
     margin-bottom: 2px;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .archive-cta-content p {
@@ -618,6 +619,7 @@ a {
     color: #ffffff;
     margin-top: 0;
     margin-bottom: 0;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .archive-cta-button {
