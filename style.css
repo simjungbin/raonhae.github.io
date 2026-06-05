@@ -594,7 +594,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 16px;
     text-align: center;
     color: var(--text-dark);
     z-index: 2;
@@ -606,6 +606,7 @@ a {
     letter-spacing: -0.184px;
     line-height: 1.4;
     font-family: var(--font-heading);
+    margin-bottom: 2px;
 }
 
 .archive-cta-content p {
@@ -614,10 +615,12 @@ a {
     font-size: 14px;
     line-height: 1.4;
     color: var(--text-dark);
+    margin-top: 0;
     margin-bottom: 0;
 }
 
 .archive-cta-button {
+    margin-top: 12px;
     background: #81dbe3;
     backdrop-filter: blur(3.45px);
     -webkit-backdrop-filter: blur(3.45px);
