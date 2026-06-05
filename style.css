@@ -710,7 +710,7 @@ a {
     position: relative;
     width: 100%;
     height: 630px;
-    margin-top: 80px; /* Offset for fixed navbar */
+    margin-top: 0; /* Navbar is now floating, no offset needed */
     display: flex;
     align-items: center;
     justify-content: center;
