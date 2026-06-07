@@ -11,46 +11,45 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
 </head>
-<div id="bubble-trail-container"></div>
+<div id="bubble-emitter-container"></div>
 
 <style>
   :root {
-    --trail-count: 16;         /* 방울들의 총 개수 */
-    --cursor-ease: 0.22;       /* 선두 방울이 마우스를 따라오는 기본 속도 */
-    
-    /* 비눗방울 스타일 세팅 (#81DBE3) */
+    /* 요청하신 비눗방울 색상 테마 (#81DBE3) */
     --bubble-edge-color: rgba(129, 219, 227, 0.75);
     --bubble-highlight: rgba(255, 255, 255, 0.85);
     --bubble-glow: rgba(129, 219, 227, 0.25);
     --bubble-gradient: linear-gradient(135deg, rgba(129, 219, 227, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(129, 219, 227, 0.2) 100%);
   }
 
-  #bubble-trail-container {
+  #bubble-emitter-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none; /* 다른 웹 요소 클릭 방해 금지 */
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* 웹사이트 클릭 방해 금지 */
     z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
   }
 
-  /* 개별 비눗방울 입자 스타일 */
-  .bubble-node {
+  /* 동적으로 생성될 비눗방울 개별 스타일 */
+  .floating-bubble {
     position: absolute;
+    top: 0;
+    left: 0;
     background: transparent;
     border: 1px solid var(--bubble-edge-color);
     border-radius: 50%;
     background-image: var(--bubble-gradient);
     box-shadow: 0 0 5px var(--bubble-glow), inset 0 0 3px var(--bubble-glow);
     transform-origin: center center;
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
   }
 
-  /* 비눗방울 특유의 반사광(눈부심) 효과 */
-  .bubble-node::after {
+  /* 비눗방울 하이라이트(빛반사) */
+  .floating-bubble::after {
     content: '';
     position: absolute;
     top: 15%;
@@ -62,13 +61,8 @@
     filter: blur(0.5px);
   }
 
-  /* 마우스 클릭 시 전체가 쫀뜩하게 수축하는 팝 이펙트 */
-  #bubble-trail-container.is-clicked {
-    transform: scale(0.65);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    #bubble-trail-container {
+    #bubble-emitter-container {
       display: none;
     }
   }
@@ -78,88 +72,83 @@
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const container = document.getElementById('bubble-trail-container');
+    const container = document.getElementById('bubble-emitter-container');
     if (!container) return;
 
     const mouse = { x: 0, y: 0 };
-    let isVisible = false;
-    let isClicked = false;
+    const lastMouse = { x: 0, y: 0 };
     let animationFrameId = null;
-
-    // --- 불규칙 트레일 튜닝 파라미터 ---
-    const count = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--trail-count')) || 16;
-    const baseEase = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cursor-ease')) || 0.22;
     
-    const nodes = [];
+    // 생성된 비눗방울들을 담아둘 배열
+    let particles = [];
 
-    // 비눗방울 노드 생성 및 불규칙 물리 속성 부여
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('div');
-      el.classList.add('bubble-node');
-      container.appendChild(el);
+    // --- 비눗방울 다이내믹 제어 파라미터 ---
+    const maxParticles = 45;       // 화면에 동시에 존재할 수 있는 최대 방울 수
+    const spawnDistance = 6;       // 마우스가 몇 px 움직일 때마다 방울을 생성할 것인가 (낮을수록 촘촘함)
+    const bubbleMaxLife = 80;      // 방울이 유지되는 생명 주기 프레임 수 (약 1~1.5초)
 
-      // 뒤로 갈수록 비눗방울이 자연스럽게 조금씩 작아지거나 불규칙하게 섞임
-      const size = 6 + Math.random() * 12 + ( (count - i) * 0.4 ); 
-      
-      // 마디마다 서로 다른 주기로 엇박자 춤을 추게 만들기 위한 고유 노이즈 파라미터
-      const wobbleSpeed = 0.05 + Math.random() * 0.08;
-      const wobbleAmp = 4 + Math.random() * 8;
-      const phaseX = Math.random() * Math.PI * 2;
-      const phaseY = Math.random() * Math.PI * 2;
-
-      // 마디별 추적 속도 제어 (뒤로 갈수록 살짝 탄성력이 다르게)
-      const ease = baseEase * (0.7 + (i / count) * 0.5);
-
-      nodes.push({
-        el: el,
-        size: size,
-        ease: ease,
-        wobbleSpeed: wobbleSpeed,
-        wobbleAmp: wobbleAmp,
-        phaseX: phaseX,
-        phaseY: phaseY,
-        pos: { x: 0, y: 0 }
-      });
-
-      // 개별 크기 설정 및 마우스 중심 정렬을 위한 마진 세팅
-      el.style.width = `${size}px`;
-      el.style.height = `${size}px`;
-      el.style.marginLeft = `${size / -2}px`;
-      el.style.marginTop = `${size / -2}px`;
-    }
-
-    // --- 인터랙션 이벤트 핸들러 ---
+    // 마우스 움직임 감지 및 생성 조건 계산
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
 
-      if (!isVisible) {
-        // 첫 마우스 조작 시 모든 트레일 마디를 마우스 위치로 순간 이동
-        nodes.forEach(node => {
-          node.pos.x = mouse.x;
-          node.pos.y = mouse.y;
-        });
-        container.style.opacity = '1';
-        isVisible = true;
+      // 마우스가 이전 위치에서 일정 거리 이상 움직였을 때만 방울 생성 (너무 뭉치지 않게 조절)
+      const distMoved = Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y);
+      
+      if (distMoved > spawnDistance && particles.length < maxParticles) {
+        createBubble(mouse.x, mouse.y);
+        // 간격을 더 벌려주기 위해 랜덤하게 보조 방울 하나 더 생성
+        if (Math.random() > 0.6) {
+          createBubble(mouse.x + (Math.random() - 0.5) * 15, mouse.y + (Math.random() - 0.5) * 15);
+        }
+        
+        lastMouse.x = mouse.x;
+        lastMouse.y = mouse.y;
       }
     });
 
-    window.addEventListener('mousedown', () => {
-      isClicked = true;
-      container.classList.add('is-clicked');
+    // 마우스 클릭 시 팝(Pop) 하면서 방울 여러 개가 확 퍼져나오는 이펙트
+    window.addEventListener('mousedown', (e) => {
+      for (let i = 0; i < 8; i++) {
+        createBubble(e.clientX, e.clientY, true);
+      }
     });
 
-    window.addEventListener('mouseup', () => {
-      isClicked = false;
-      container.classList.remove('is-clicked');
-    });
+    // 개별 비눗방울 객체 생성 함수
+    function createBubble(startX, startY, isClickSpawn = false) {
+      const el = document.createElement('div');
+      el.classList.add('floating-bubble');
+      container.appendChild(el);
 
-    document.addEventListener('mouseleave', () => {
-      container.style.opacity = '0';
-      isVisible = false;
-    });
+      const size = 6 + Math.random() * 14; // 무작위 크기
+      
+      // 초기 물리 값 세팅
+      // 클릭으로 생성된 방울은 사방으로 튕겨나가고, 평소 마우스 이동으로 생긴 방울은 살짝 아래/옆으로 부드럽게 시작
+      const vx = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() - 0.5) * 1;
+      const vy = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() * 0.5); // 아주 살짝 아래 탄성 유도
 
-    // 화면에 보일 때만 애니메이션 가동 (성능 최적화)
+      particles.push({
+        el: el,
+        x: startX,
+        y: startY,
+        vx: vx,
+        vy: vy,
+        size: size,
+        alpha: 1,
+        life: bubbleMaxLife * (0.7 + Math.random() * 0.5), // 생존 시간 랜덤화
+        maxLife: bubbleMaxLife,
+        wobbleSpeed: 0.05 + Math.random() * 0.05,
+        wobbleAmp: 1 + Math.random() * 2,
+        phase: Math.random() * Math.PI * 2
+      });
+
+      // 엘리먼트 기본 사이즈 세팅
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.transform = `translate3d(${startX - size/2}px, ${startY - size/2}px, 0)`;
+    }
+
+    // 화면 노출 상태 감지 최적화
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -172,33 +161,51 @@
     });
     observer.observe(container);
 
-    // --- 메인 루프 (연쇄 추적 + 불규칙 노이즈 계산) ---
+    // --- 애니메이션 루프 (상승 밎 소멸 계산) ---
     function render(time) {
       const timeSec = time * 0.001;
+      const activeParticles = [];
 
-      for (let i = 0; i < count; i++) {
-        const node = nodes[i];
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.life--;
 
-        // 1. 추적 타겟 결정
-        // 첫 번째 노드는 마우스를 직접 쫓고, 그 뒤의 노드들은 '바로 앞 노드'의 현재 위치를 쫓습니다. (트레일 구조)
-        const targetX = (i === 0) ? mouse.x : nodes[i - 1].pos.x;
-        const targetY = (i === 0) ? mouse.y : nodes[i - 1].pos.y;
+        if (p.life > 0) {
+          // 1. 위로 떠오르는 물리 법칙 적용 (-Y축 방향으로 지속적인 상승 기류 추가)
+          p.vy -= 0.06; // 이 값을 더 키우면(예: 0.1) 비눗방울이 더 빠르게 위로 슝 올라갑니다.
+          
+          // 공기 저항 및 속도 감쇠
+          p.vx *= 0.96;
+          p.vy *= 0.96;
 
-        // 2. 규칙성을 파괴하는 카오틱 흔들림(Wobble) 계산
-        // 각 마디가 쫓아갈 때 똑바로 가지 않고 자기만의 주파수(Sine)로 출렁이며 빗겨 나갑니다.
-        const wobbleX = Math.sin(timeSec * node.wobbleSpeed * 1.2 + node.phaseX) * node.wobbleAmp;
-        const wobbleY = Math.cos(timeSec * node.wobbleSpeed * 0.9 + node.phaseY) * node.wobbleAmp;
+          // 좌표 갱신
+          p.x += p.vx;
+          p.y += p.vy;
 
-        const finalTargetX = targetX + wobbleX;
-        const finalTargetY = targetY + wobbleY;
+          // 2. 좌우로 흔들리는 바람(Wobble) 효과 추가
+          const windX = Math.sin(timeSec * p.wobbleSpeed + p.phase) * p.wobbleAmp;
 
-        // 3. 부드러운 선형 보간 추적 (Lerp)
-        node.pos.x += (finalTargetX - node.pos.x) * node.ease;
-        node.pos.y += (finalTargetY - node.pos.y) * node.ease;
+          // 3. 시간이 지날수록 서서히 투명해지기 (Fade Out)
+          // 수명이 30프레임 이하로 남았을 때부터 급격히 사라짐
+          if (p.life < 30) {
+            p.alpha = p.life / 30;
+          } else {
+            p.alpha = Math.min(1, p.alpha + 0.1); // 처음에 부드럽게 나타나기
+          }
 
-        // 4. 화면에 좌표 렌더링
-        node.el.style.transform = `translate3d(${node.pos.x}px, ${node.pos.y}px, 0)`;
+          // 4. 화면 렌더링 반영
+          p.el.style.transform = `translate3d(${p.x - p.size/2 + windX}px, ${p.y - p.size/2}px, 0) scale(${p.alpha * 0.3 + 0.7})`;
+          p.el.style.opacity = p.alpha;
+
+          activeParticles.push(p);
+        } else {
+          // 수명이 다한 비눗방울은 DOM에서 깔끔하게 완전히 제거 (메모리 관리)
+          p.el.remove();
+        }
       }
+
+      // 살아있는 파티클만 유지
+      particles = activeParticles;
 
       animationFrameId = requestAnimationFrame(render);
     }
