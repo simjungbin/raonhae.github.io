@@ -28,12 +28,12 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; /* 웹사이트 클릭 방해 금지 */
+    pointer-events: none; /* 웹사이트 인터랙션 방해 금지 */
     z-index: 9999;
     overflow: hidden;
   }
 
-  /* 동적으로 생성될 비눗방울 개별 스타일 */
+  /* 개별 비눗방울 스타일 */
   .floating-bubble {
     position: absolute;
     top: 0;
@@ -42,13 +42,13 @@
     border: 1px solid var(--bubble-edge-color);
     border-radius: 50%;
     background-image: var(--bubble-gradient);
-    box-shadow: 0 0 5px var(--bubble-glow), inset 0 0 3px var(--bubble-glow);
+    box-shadow: 0 0 6px var(--bubble-glow), inset 0 0 4px var(--bubble-glow);
     transform-origin: center center;
     will-change: transform, opacity;
     opacity: 0;
   }
 
-  /* 비눗방울 하이라이트(빛반사) */
+  /* 비눗방울 반사광(하이라이트) */
   .floating-bubble::after {
     content: '';
     position: absolute;
@@ -79,27 +79,25 @@
     const lastMouse = { x: 0, y: 0 };
     let animationFrameId = null;
     
-    // 생성된 비눗방울들을 담아둘 배열
     let particles = [];
 
-    // --- 비눗방울 다이내믹 제어 파라미터 ---
-    const maxParticles = 45;       // 화면에 동시에 존재할 수 있는 최대 방울 수
-    const spawnDistance = 6;       // 마우스가 몇 px 움직일 때마다 방울을 생성할 것인가 (낮을수록 촘촘함)
-    const bubbleMaxLife = 80;      // 방울이 유지되는 생명 주기 프레임 수 (약 1~1.5초)
+    // --- 비눗방울 파라미터 조절 ---
+    const maxParticles = 40;       // 화면 내 최대 방울 수 (크기가 커진 만큼 개수를 소폭 조정하여 쾌적함 유지)
+    const spawnDistance = 8;       // 방울이 생성되는 마우스 이동 간격 (px)
+    const bubbleMaxLife = 90;      // 방울의 기본 수명 프레임 (약 1.5초로 살짝 늘림)
 
-    // 마우스 움직임 감지 및 생성 조건 계산
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
 
-      // 마우스가 이전 위치에서 일정 거리 이상 움직였을 때만 방울 생성 (너무 뭉치지 않게 조절)
       const distMoved = Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y);
       
       if (distMoved > spawnDistance && particles.length < maxParticles) {
         createBubble(mouse.x, mouse.y);
-        // 간격을 더 벌려주기 위해 랜덤하게 보조 방울 하나 더 생성
+        
+        // 40% 확률로 크기가 다른 서브 비눗방울을 근처에 동시 생성하여 풍성함 연출
         if (Math.random() > 0.6) {
-          createBubble(mouse.x + (Math.random() - 0.5) * 15, mouse.y + (Math.random() - 0.5) * 15);
+          createBubble(mouse.x + (Math.random() - 0.5) * 20, mouse.y + (Math.random() - 0.5) * 20);
         }
         
         lastMouse.x = mouse.x;
@@ -107,25 +105,27 @@
       }
     });
 
-    // 마우스 클릭 시 팝(Pop) 하면서 방울 여러 개가 확 퍼져나오는 이펙트
+    // 클릭 시 팡! 하고 방울들이 사방으로 튀어나오는 효과
     window.addEventListener('mousedown', (e) => {
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 6; i++) {
         createBubble(e.clientX, e.clientY, true);
       }
     });
 
-    // 개별 비눗방울 객체 생성 함수
     function createBubble(startX, startY, isClickSpawn = false) {
       const el = document.createElement('div');
       el.classList.add('floating-bubble');
       container.appendChild(el);
 
-      const size = 6 + Math.random() * 14; // 무작위 크기
+      // [수정] 비눗방울 크기 스케일 업 (기존 6~20px -> 변경 12~34px)
+      const size = 12 + Math.random() * 22; 
       
-      // 초기 물리 값 세팅
-      // 클릭으로 생성된 방울은 사방으로 튕겨나가고, 평소 마우스 이동으로 생긴 방울은 살짝 아래/옆으로 부드럽게 시작
-      const vx = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() - 0.5) * 1;
-      const vy = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() * 0.5); // 아주 살짝 아래 탄성 유도
+      // [수정] 방울마다 고유의 초기 투명도를 다르게 설정 (0.4 ~ 0.95 사이)
+      // 멀리 있는 듯 은은한 방울과 가까이 있는 듯 선명한 방울이 공존하게 됩니다.
+      const initAlpha = 0.4 + Math.random() * 0.55;
+
+      const vx = isClickSpawn ? (Math.random() - 0.5) * 5 : (Math.random() - 0.5) * 1.2;
+      const vy = isClickSpawn ? (Math.random() - 0.5) * 5 : (Math.random() * 0.4);
 
       particles.push({
         el: el,
@@ -134,21 +134,19 @@
         vx: vx,
         vy: vy,
         size: size,
-        alpha: 1,
-        life: bubbleMaxLife * (0.7 + Math.random() * 0.5), // 생존 시간 랜덤화
-        maxLife: bubbleMaxLife,
-        wobbleSpeed: 0.05 + Math.random() * 0.05,
-        wobbleAmp: 1 + Math.random() * 2,
+        initAlpha: initAlpha, // 고유 초기 투명도 저장
+        alpha: 0,             // 시작할 때는 페이드인되도록 0부터 시작
+        life: bubbleMaxLife * (0.7 + Math.random() * 0.6),
+        wobbleSpeed: 0.04 + Math.random() * 0.05,
+        wobbleAmp: 1.5 + Math.random() * 2.5,
         phase: Math.random() * Math.PI * 2
       });
 
-      // 엘리먼트 기본 사이즈 세팅
       el.style.width = `${size}px`;
       el.style.height = `${size}px`;
       el.style.transform = `translate3d(${startX - size/2}px, ${startY - size/2}px, 0)`;
     }
 
-    // 화면 노출 상태 감지 최적화
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -161,7 +159,6 @@
     });
     observer.observe(container);
 
-    // --- 애니메이션 루프 (상승 밎 소멸 계산) ---
     function render(time) {
       const timeSec = time * 0.001;
       const activeParticles = [];
@@ -171,42 +168,37 @@
         p.life--;
 
         if (p.life > 0) {
-          // 1. 위로 떠오르는 물리 법칙 적용 (-Y축 방향으로 지속적인 상승 기류 추가)
-          p.vy -= 0.06; // 이 값을 더 키우면(예: 0.1) 비눗방울이 더 빠르게 위로 슝 올라갑니다.
-          
-          // 공기 저항 및 속도 감쇠
+          // 위로 떠오르는 상승 기류 운동
+          p.vy -= 0.05;
           p.vx *= 0.96;
           p.vy *= 0.96;
 
-          // 좌표 갱신
           p.x += p.vx;
           p.y += p.vy;
 
-          // 2. 좌우로 흔들리는 바람(Wobble) 효과 추가
+          // 공기 흐름에 따른 좌우 출렁임
           const windX = Math.sin(timeSec * p.wobbleSpeed + p.phase) * p.wobbleAmp;
 
-          // 3. 시간이 지날수록 서서히 투명해지기 (Fade Out)
-          // 수명이 30프레임 이하로 남았을 때부터 급격히 사라짐
-          if (p.life < 30) {
-            p.alpha = p.life / 30;
-          } else {
-            p.alpha = Math.min(1, p.alpha + 0.1); // 처음에 부드럽게 나타나기
+          // 생명 주기에 따른 부드러운 알파(투명도) 보간 계산
+          if (p.life < 35) {
+            // 수명이 끝나갈 때 고유 투명도에서부터 자연스럽게 사라짐
+            p.alpha = (p.life / 35) * p.initAlpha;
+          } else if (p.alpha < p.initAlpha) {
+            // 처음 스폰될 때 툭 나타나지 않고 고유 투명도까지 스무스하게 페이드인
+            p.alpha = Math.min(p.initAlpha, p.alpha + 0.08);
           }
 
-          // 4. 화면 렌더링 반영
-          p.el.style.transform = `translate3d(${p.x - p.size/2 + windX}px, ${p.y - p.size/2}px, 0) scale(${p.alpha * 0.3 + 0.7})`;
+          // 스타일 렌더링 반영
+          p.el.style.transform = `translate3d(${p.x - p.size/2 + windX}px, ${p.y - p.size/2}px, 0) scale(${p.alpha / p.initAlpha * 0.2 + 0.8})`;
           p.el.style.opacity = p.alpha;
 
           activeParticles.push(p);
         } else {
-          // 수명이 다한 비눗방울은 DOM에서 깔끔하게 완전히 제거 (메모리 관리)
           p.el.remove();
         }
       }
 
-      // 살아있는 파티클만 유지
       particles = activeParticles;
-
       animationFrameId = requestAnimationFrame(render);
     }
   })();
