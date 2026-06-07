@@ -11,6 +11,158 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
 </head>
+<div id="blob-cursor"></div>
+
+<style>
+  /* Tunable parameters via CSS Custom Properties */
+  :root {
+    --cursor-ease: 0.18;      /* range 0.05 .. 0.4 - 커서가 따라오는 부드러움 정도 */
+    --cursor-stretch: 0.012;  /* range 0 .. 0.04  - 마우스 속도에 따른 늘어남 정도 */
+    --cursor-size: 24px;      /* 커서의 기본 크기 */
+    --cursor-color: #81DBE3;  /* 요청하신 색상 */
+  }
+
+  #blob-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    margin-left: calc(var(--cursor-size) / -2);
+    margin-top: calc(var(--cursor-size) / -2);
+    background-color: var(--cursor-color);
+    border-radius: 50%;
+    pointer-events: none; /* 커서가 다른 요소의 클릭을 방해하지 않도록 설정 */
+    z-index: 9999;
+    will-change: transform;
+    transform-origin: center center;
+    opacity: 0;
+    /* 클릭 효과와 투명도 전환이 부드럽도록 transition 설정 */
+    transition: opacity 0.3s ease, background-color 0.2s ease;
+  }
+
+  /* 클릭했을 때 활성화될 스타일 */
+  #blob-cursor.is-clicked {
+    background-color: #5ec3cb; /* 클릭 시 약간 더 진한 민트빛으로 변경 */
+  }
+
+  /* 접근성 고려: 사용자가 애니메이션 감축을 설정한 경우 정적인 커서로 대체 */
+  @media (prefers-reduced-motion: reduce) {
+    #blob-cursor {
+      transform: none !important;
+      border-radius: 50% !important;
+      background-color: transparent;
+      border: 2px solid var(--cursor-color);
+    }
+    #blob-cursor.is-clicked {
+      transform: none !important;
+      background-color: var(--cursor-color);
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    // 사용자가 애니메이션 감축을 선호하는지 확인
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const cursor = document.getElementById('blob-cursor');
+    if (!cursor) return;
+
+    // 마우스의 실제 위치
+    const mouse = { x: 0, y: 0 };
+    // 커서의 현재 렌더링 위치
+    const pos = { x: 0, y: 0 };
+    // 이전 프레임에서의 위치 (속도 계산용)
+    const lastPos = { x: 0, y: 0 };
+    
+    let isVisible = false;
+    let isClicked = false;
+    let animationFrameId = null;
+
+    // 파라미터 값 로드
+    const rootStyles = getComputedStyle(document.documentElement);
+    const ease = parseFloat(rootStyles.getPropertyValue('--cursor-ease').trim()) || 0.18;
+    const stretchFactor = parseFloat(rootStyles.getPropertyValue('--cursor-stretch').trim()) || 0.012;
+
+    // 마우스 움직임 감지
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      
+      if (!isVisible) {
+        // 첫 움직임 때 커서를 표시하고 위치를 동기화
+        pos.x = lastPos.x = mouse.x;
+        pos.y = lastPos.y = mouse.y;
+        cursor.style.opacity = '1';
+        isVisible = true;
+      }
+    });
+
+    // 마우스 클릭 이벤트 트리거
+    window.addEventListener('mousedown', () => {
+      isClicked = true;
+      cursor.classList.add('is-clicked');
+    });
+
+    window.addEventListener('mouseup', () => {
+      isClicked = false;
+      cursor.classList.remove('is-clicked');
+    });
+
+    // 화면 밖으로 마우스가 나갔을 때 처리
+    document.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0';
+      isVisible = false;
+    });
+
+    // 성능 최적화: IntersectionObserver를 사용하여 커서가 화면에 보일 때만 루프 실행
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!animationFrameId) render();
+        } else {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      });
+    });
+    observer.observe(cursor);
+
+    // 매 프레임 계산 및 렌더링 루프
+    function render() {
+      // 선형 보간(Lerp)을 통한 부드러운 추적
+      pos.x += (mouse.x - pos.x) * ease;
+      pos.y += (mouse.y - pos.y) * ease;
+
+      // 이전 프레임 대비 이동 거리(속도) 계산
+      const deltaX = pos.x - lastPos.x;
+      const deltaY = pos.y - lastPos.y;
+      const distance = Math.hypot(deltaX, deltaY);
+
+      // 이동 방향 각도 계산 (라디안)
+      const angle = Math.atan2(deltaY, deltaX);
+
+      // 클릭 중일 때와 아닐 때의 변형 분기
+      if (isClicked) {
+        // 클릭 시: 순간적으로 사방으로 쪼그라드는 일정한 스케일 적용 (탱글한 느낌)
+        cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) rotate(${angle}rad) scale(0.6, 0.6)`;
+      } else {
+        // 평소 이동 시: 속도에 맞춰 늘어남(stretch)과 압축(squash) 비율 계산
+        const stretch = distance * stretchFactor;
+        const scaleX = 1 + stretch;
+        const scaleY = 1 / (1 + stretch);
+        cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) rotate(${angle}rad) scale(${scaleX}, ${scaleY})`;
+      }
+
+      // 다음 프레임을 위해 현재 위치 저장
+      lastPos.x = pos.x;
+      lastPos.y = pos.y;
+
+      animationFrameId = requestAnimationFrame(render);
+    }
+  })();
+</script>
 <body>
     <nav class="navbar">
         <div class="nav-container">
