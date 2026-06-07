@@ -11,6 +11,209 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
 </head>
+<div id="bubble-emitter-container"></div>
+
+<style>
+  :root {
+    /* [스타일 수정] 이미지의 몽환적인 연보라 + 하늘빛 오로라 질감 구현 */
+    --bubble-edge-color: rgba(220, 205, 255, 0.55); /* 부드러운 연보라빛 테보리 */
+    --bubble-highlight: rgba(255, 255, 255, 0.9);   /* 선명하고 맑은 하이라이트 */
+    --bubble-glow: rgba(129, 219, 227, 0.2);        /* 은은한 시안빛 네온 효과 */
+    
+    /* 비눗방울 표면의 다채로운 무지갯빛 그라데이션 */
+    --bubble-gradient: linear-gradient(135deg, 
+      rgba(240, 215, 255, 0.35) 0%, 
+      rgba(255, 255, 255, 0) 40%, 
+      rgba(129, 219, 227, 0.25) 100%
+    );
+  }
+
+  #bubble-emitter-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* 웹사이트 클릭 방해 방지 */
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  /* 개별 비눗방울 요소 스타일 */
+  .floating-bubble {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    border: 0.5px solid var(--bubble-edge-color); /* 이미지처럼 얇은 선 처리 */
+    border-radius: 50%;
+    background-image: var(--bubble-gradient);
+    box-shadow: 
+      0 0 4px var(--bubble-glow), 
+      inset 0 0 6px rgba(230, 210, 255, 0.3); /* 안쪽으로 살짝 도는 보라색 섀도우 */
+    transform-origin: center center;
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  /* 이미지 속 비눗방울 특유의 초승달 모양 같은 반사광 연출 */
+  .floating-bubble::after {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 12%;
+    width: 22%;
+    height: 22%;
+    background-color: var(--bubble-highlight);
+    border-radius: 50%;
+    filter: blur(0.3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bubble-emitter-container {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const container = document.getElementById('bubble-emitter-container');
+    if (!container) return;
+
+    const mouse = { x: 0, y: 0 };
+    const lastMouse = { x: 0, y: 0 };
+    let animationFrameId = null;
+    
+    let particles = [];
+
+    // --- [파라미터 조정] 분포도 조절 및 스케일 최적화 ---
+    const maxParticles = 30;       // [수정] 분포도를 줄이기 위해 최대 동시 개수 하향 (55 -> 30)
+    const spawnDistance = 12;      // [수정] 방울이 찍히는 간격을 넓혀 과하게 뭉치지 않도록 조절 (6 -> 12)
+    const bubbleMaxLife = 110;     // 위로 여유롭게 흐르듯 올라가도록 수명 유지
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+
+      const distMoved = Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y);
+      
+      if (distMoved > spawnDistance && particles.length < maxParticles) {
+        // 기본 방울 생성
+        createBubble(mouse.x, mouse.y);
+        
+        // [수정] 확률을 0.4에서 0.25로 낮춰 보조 방울이 덜 생기도록 하여 맑고 깔끔한 밀도 유지
+        if (Math.random() > 0.75) {
+          createBubble(mouse.x + (Math.random() - 0.5) * 12, mouse.y + (Math.random() - 0.5) * 12);
+        }
+        
+        lastMouse.x = mouse.x;
+        lastMouse.y = mouse.y;
+      }
+    });
+
+    // 클릭 팝 임팩트도 과하지 않게 소폭 조정
+    window.addEventListener('mousedown', (e) => {
+      for (let i = 0; i < 4; i++) {
+        createBubble(e.clientX, e.clientY, true);
+      }
+    });
+
+    function createBubble(startX, startY, isClickSpawn = false) {
+      const el = document.createElement('div');
+      el.classList.add('floating-bubble');
+      container.appendChild(el);
+
+      // 사진처럼 다양한 크기감이 표현되도록 랜덤 지름 설정
+      const targetSize = 14 + Math.random() * 26; 
+      
+      // 사진 특유의 맑고 투명한 감성을 위해 알파 값 하향 조절 (0.2 ~ 0.7)
+      const initAlpha = 0.2 + Math.random() * 0.5;
+
+      const vx = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() - 0.5) * 1.0;
+      const vy = isClickSpawn ? (Math.random() - 0.5) * 4 : (Math.random() * 0.15);
+
+      particles.push({
+        el: el,
+        x: startX,
+        y: startY,
+        vx: vx,
+        vy: vy,
+        size: targetSize,
+        initAlpha: initAlpha,
+        alpha: 0,
+        life: bubbleMaxLife * (0.8 + Math.random() * 0.5),
+        maxLife: bubbleMaxLife,
+        wobbleSpeed: 0.02 + Math.random() * 0.03, // 흔들림을 살짝 더 차분하게 수정
+        wobbleAmp: 1.5 + Math.random() * 3,
+        phase: Math.random() * Math.PI * 2
+      });
+
+      el.style.width = `${targetSize}px`;
+      el.style.height = `${targetSize}px`;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!animationFrameId) render();
+        } else {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      });
+    });
+    observer.observe(container);
+
+    function render(time) {
+      const timeSec = time * 0.001;
+      const activeParticles = [];
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.life--;
+
+        if (p.life > 0) {
+          // 자연스러운 상승 기류 운동
+          p.vy -= 0.04;
+          p.vx *= 0.97;
+          p.vy *= 0.96;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          const windX = Math.sin(timeSec * p.wobbleSpeed + p.phase) * p.wobbleAmp;
+          const currentProgress = 1 - (p.life / (p.maxLife * 1.2)); 
+          
+          // 작게 피어올라 올라갈수록 기압차로 부풀어 오르는 연출
+          let currentScale = 0.3 + (currentProgress * 0.8);
+          if (currentScale > 1.05) currentScale = 1.05;
+
+          // 투명도 스무스 보간
+          if (p.life < 35) {
+            p.alpha = (p.life / 35) * p.initAlpha;
+            currentScale *= (p.life / 35) * 0.2 + 0.8;
+          } else if (p.alpha < p.initAlpha) {
+            p.alpha = Math.min(p.initAlpha, p.alpha + 0.08);
+          }
+
+          // 화면 반영
+          p.el.style.transform = `translate3d(${p.x - p.size/2 + (windX * (1 + currentProgress * 1.5))}px, ${p.y - p.size/2}px, 0) scale(${currentScale})`;
+          p.el.style.opacity = p.alpha;
+
+          activeParticles.push(p);
+        } else {
+          p.el.remove();
+        }
+      }
+
+      particles = activeParticles;
+      animationFrameId = requestAnimationFrame(render);
+    }
+  })();
+</script>
 <body>
     <nav class="navbar">
         <div class="nav-container">
