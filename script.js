@@ -319,4 +319,94 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
+
+    // Product Hero Cassette Interactions
+    const cassetteContainer = document.querySelector('.cassette-container');
+    const floatingCassette = document.querySelector('.floating-cassette');
+    const heroNewContent = document.querySelector('.hero-new-content');
+    const summerAudio = document.getElementById('summerAudio');
+
+    if (cassetteContainer && floatingCassette && heroNewContent && summerAudio) {
+        // Interactive hover physics strictly on the image itself
+        floatingCassette.addEventListener('mousemove', (e) => {
+            const rect = floatingCassette.getBoundingClientRect();
+            
+            // Calculate center of the image
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // Normalize distance from center (-1 to 1)
+            const deltaX = (e.clientX - centerX) / (rect.width / 2);
+            const deltaY = (e.clientY - centerY) / (rect.height / 2);
+            
+            // Push away from mouse (max 10px translate, 2deg rotate)
+            const moveX = -(deltaX * 10);
+            const moveY = -(deltaY * 10);
+            const rotate = -(deltaX * 2);
+            
+            cassetteContainer.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+        });
+
+        floatingCassette.addEventListener('mouseleave', () => {
+            cassetteContainer.style.transform = 'translate(0px, 0px) rotate(0deg)';
+        });
+
+        // Click to play interaction
+        let isPlaying = false;
+        floatingCassette.addEventListener('click', () => {
+            if (isPlaying) {
+                summerAudio.pause();
+                heroNewContent.classList.remove('playing');
+            } else {
+                if (summerAudio.src && summerAudio.src !== window.location.href) {
+                    summerAudio.play().catch(e => console.log('Playback prevented: ', e));
+                } else {
+                    console.log('Audio source not set. Add src to <audio id="summerAudio">.');
+                }
+                heroNewContent.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        });
+    }
+
+    // Sound button toggle
+    const soundBtn = document.querySelector('.sound-btn');
+    const soundIcon = document.getElementById('soundIcon');
+    const heroVideo = document.querySelector('.hero-bg video');
+
+    if (soundBtn && soundIcon) {
+        let isMuted = false;
+        soundBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                soundIcon.src = 'assets/off.png';
+                soundIcon.alt = 'Sound Off';
+                if (summerAudio) summerAudio.muted = true;
+                if (heroVideo) heroVideo.muted = true;
+            } else {
+                soundIcon.src = 'assets/on.png';
+                soundIcon.alt = 'Sound On';
+                if (summerAudio) summerAudio.muted = false;
+                if (heroVideo) heroVideo.muted = false;
+            }
+        });
+    }
+
+    // Story Intro Fade-up Animation
+    const fadeUpElements = document.querySelectorAll('.fade-up-element');
+    if (fadeUpElements.length > 0) {
+        const fadeUpObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Optional: stop observing once it has faded in
+                    fadeUpObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        fadeUpElements.forEach(el => {
+            fadeUpObserver.observe(el);
+        });
+    }
 });

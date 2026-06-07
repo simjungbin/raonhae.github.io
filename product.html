@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'HSJandari';
@@ -237,32 +238,72 @@
         </div>
     </nav>
 
-    <header class="hero product-page-hero">
+    <header class="hero product-page-hero product-new-hero">
         <div class="hero-bg">
             <video autoplay loop muted playsinline>
-                <source src="assets/product_header.mp4" type="video/mp4">
+                <source src="assets/sky-background.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <div class="hero-overlay"></div>
         </div>
-        <div class="hero-content">
-            <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학,
-그 찬란한 우리의 기록"><span class="typewriter-text"></span></h1>
-            <p class="product-hero-desc">
-                빛바랜 카세트테이프 속 흘러나오는<br>여름의 선율, 다시 마주한 첫사랑의 조각
-            </p>
-            <a href="#" class="product-hero-link">PLAY THE MEMORY &gt;</a>
+        
+        <div class="hero-new-content">
+            <!-- Background Orbit Line -->
+            <div class="orbit-container">
+                <svg viewBox="0 0 1200 400" class="orbit-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="600" cy="200" rx="550" ry="140" stroke="rgba(255, 255, 255, 0.5)" stroke-width="1" stroke-dasharray="3 6"/>
+                    <!-- Star left -->
+                    <path class="orbit-star" style="transform-origin: 50px 200px;" d="M 50 200 L 55 190 L 60 200 L 70 205 L 60 210 L 55 220 L 50 210 L 40 205 Z" fill="none" stroke="white" stroke-width="1" transform="scale(0.8) translate(10, 40)"/>
+                    <!-- Star right -->
+                    <path class="orbit-star" style="transform-origin: 1133px 183px; animation-delay: 0.5s;" d="M 1130 180 L 1133 175 L 1136 180 L 1141 183 L 1136 186 L 1133 191 L 1130 186 L 1125 183 Z" fill="none" stroke="white" stroke-width="1"/>
+                    <path class="orbit-star" style="transform-origin: 283px 43px; animation-delay: 1.2s;" d="M 280 40 L 283 35 L 286 40 L 291 43 L 286 46 L 283 51 L 280 46 L 275 43 Z" fill="white" />
+                    <path class="orbit-star" style="transform-origin: 953px 323px; animation-delay: 0.8s;" d="M 950 320 L 953 315 L 956 320 L 961 323 L 956 326 L 953 331 L 950 326 L 945 323 Z" fill="white" />
+                </svg>
+            </div>
+
+            <div class="hero-center-wrapper">
+
+                
+                <div class="cassette-container">
+                    <img src="assets/cassette-floating.png" alt="Cassette Tape" class="floating-cassette">
+                </div>
+                
+                <div class="bottom-center-title">
+                    <h1>Our Summer</h1>
+                </div>
+            </div>
+            
+            <div class="hero-bottom-section">
+                <div class="bottom-left">
+                    <p class="desc-text">빛바랜 카세트테이프 속 흘러나오는<br>여름의 선율, 다시 마주한 첫사랑의 조각</p>
+                    <a href="#" class="play-link">PLAY THE MEMORY &gt;</a>
+                </div>
+                <div class="bottom-right">
+                    <button class="sound-btn" aria-label="Toggle Sound">
+                        <img src="assets/on.png" alt="Sound On" id="soundIcon" style="width: 24px; height: 24px; object-fit: contain;">
+                    </button>
+                    <p class="desc-text text-right">아날로그 감성으로 기록한<br>여름의 순간들을 담은<br>카세트테이프 형태의 앨범입니다.</p>
+                </div>
+            </div>
+            
+            <!-- Audio element for click interaction -->
+            <audio id="summerAudio" src=""></audio>
         </div>
     </header>
 
     <main class="product-main">
-        <section class="product-intro">
-            <div class="product-intro-text">
-                <h2>RAONHAE<br>SUMMER CASSETTE</h2>
-                <p>아날로그 감성으로 기록한<br>여름의 순간들을 담은<br>카세트테이프 형태의 앨범입니다.</p>
+        <!-- Story Intro Section -->
+        <section class="story-intro">
+            <div class="story-intro-bg">
+                <video autoplay loop muted playsinline>
+                    <source src="assets/product-video-1.mp4" type="video/mp4">
+                </video>
+                <div class="story-intro-overlay"></div>
             </div>
-            <div class="product-intro-image">
-                <img src="./assets/cf93cfecf9f07c068ee91d16715b2b3059a210e8.png" alt="Raonhae Summer Cassette">
+            <div class="story-intro-content">
+                <h2 class="fade-up-element">다시 꺼내본 우리의 여름</h2>
+                <p class="fade-up-element">
+                    빈티지한 카세트 디자인과 함께 여름의 추억을 담은 음악을 수록하여, 듣는 이가 자신만의 기억을 떠올릴 수 있도록 기획되었습니다. 빠르게 소비되는 디지털 콘텐츠와 달리, 천천히 재생되고 오래도록 남는 기록의 가치를 전달합니다.
+                </p>
             </div>
         </section>
 
