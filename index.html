@@ -331,13 +331,149 @@
 
             <div class="archive-cta-banner">
                 <img src="assets/story_product.jpeg" alt="Story Product" class="archive-banner-img">
-                <div class="archive-cta-overlay">
-                    <div class="archive-cta-content">
-                        <h2>가장 찬란했던 여름의 기록</h2>
-                        <p>빛바랜 기억과 청춘의 감정을 담은 카세트테이프 아카이브를 만나보세요.</p>
-                        <a href="product.html"><button class="archive-cta-button">Archive Collection</button></a>
-                    </div>
-                </div>
+                <div class="archive-cta-overlay" id="ripple-target">
+    <div class="ripple-wave-layer"></div>
+    
+    <div class="archive-cta-content">
+        <h2>가장 찬란했던 여름의 기록</h2>
+        <p>빛바랜 기억과 청춘의 감정을 담은 카세트테이프 아카이브를 만나보세요.</p>
+        <a href="product.html"><button class="archive-cta-button">Archive Collection</button></a>
+    </div>
+</div>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <defs>
+        <filter id="water-ripple-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" result="displacement" />
+        </filter>
+    </defs>
+</svg>
+
+<style>
+  /* 튜닝 파라미터 (CSS Custom Properties) */
+  :root {
+    --ripple-speed: 0.55;    /* 물결이 요동치는 속도 (0.1 ~ 1.5) */
+    --ripple-freq: 32;       /* 물결의 빈도/잔물결 밀도 (10 ~ 60) */
+    --ripple-amp: 0.05;      /* 물결 왜곡 진폭/강도 (0.01 ~ 0.12) */
+    --ripple-life: 2.8;      /* 마우스가 멈춘 후 물결이 유지되는 시간 (0.6 ~ 5.0) */
+  }
+
+  /* 부모 레이어에 relative와 overflow hidden 필수 확보 */
+  .archive-cta-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 실제 물결 효과가 먹히는 복제 배경 레이어 */
+  .ripple-wave-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 부모인 .archive-cta-overlay의 배경 이미지와 속성을 똑같이 동기화해 주셔야 자연스럽습니다. */
+    background: inherit; 
+    z-index: 1;
+    pointer-events: none;
+    will-change: filter;
+    /* 초기 상태에는 필터가 걸려있으나 scale이 0이라 왜곡이 없습니다. */
+    filter: url(#water-ripple-filter); 
+  }
+
+  /* 글자와 버튼이 물결 뒤로 숨지 않고 정상적으로 클릭되도록 레이어 순서 정리 */
+  .archive-cta-content {
+    position: relative;
+    z-index: 2; 
+  }
+
+  /* 접근성: 사용자가 애니메이션 감축 모드를 켠 경우 필터 효과 전면 차단 */
+  @media (prefers-reduced-motion: reduce) {
+    .ripple-wave-layer {
+      filter: none !important;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const target = document.getElementById('ripple-target');
+    // SVG 내부의 displacementMap 요소를 찾아 직접 스크립트로 제어합니다.
+    const displacementMap = document.querySelector('#water-ripple-filter feDisplacementMap');
+    const turbulence = document.querySelector('#water-ripple-filter feTurbulence');
+    
+    if (!target || !displacementMap || !turbulence) return;
+
+    // CSS 변수로부터 튜닝 값 파싱
+    const rootStyles = getComputedStyle(document.documentElement);
+    const speed = parseFloat(rootStyles.getPropertyValue('--ripple-speed')) || 0.55;
+    const freqSetting = parseFloat(rootStyles.getPropertyValue('--ripple-freq')) || 32;
+    const ampSetting = parseFloat(rootStyles.getPropertyValue('--ripple-amp')) || 0.05;
+    const lifeSetting = parseFloat(rootStyles.getPropertyValue('--ripple-life')) || 2.8;
+
+    let animationFrameId = null;
+    let isHovered = false;
+    
+    // 왜곡 연산에 플러그인될 가변 상태 변수
+    let currentScale = 0;
+    let targetScale = 0;
+    let timeSum = 0;
+
+    // 호버 이벤트 감지
+    target.addEventListener('mouseenter', () => {
+      isHovered = true;
+      // 마우스가 들어오면 설정한 진폭(amp)에 비례하여 최대 왜곡 수치 지정
+      targetScale = ampSetting * 800; 
+    });
+
+    // 마우스가 영역 위에서 움직일 때 물결이 더 역동적으로 반응하도록 처리
+    target.addEventListener('mousemove', () => {
+      if (isHovered) {
+        currentScale = Math.min(ampSetting * 1100, currentScale + 5);
+      }
+    });
+
+    target.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetScale = 0; // 마우스가 나가면 물결 평탄화 유도
+    });
+
+    // 성능 최적화: 브라우저 화면에 보일 때만 연산 루프 가동
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!animationFrameId) render();
+        } else {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      });
+    });
+    observer.observe(target);
+
+    // 매 프레임 왜곡을 계산하는 엔진 루프
+    function render() {
+      // 1. 노이즈 시간 변화량 계산 (물이 흘러가듯 요동치는 애니메이션 유도)
+      timeSum += speed * 0.04;
+      const baseFreqX = (freqSetting / 2000) + Math.sin(timeSum) * 0.002;
+      const baseFreqY = (freqSetting / 2000) + Math.cos(timeSum) * 0.002;
+      
+      turbulence.setAttribute('baseFrequency', `${baseFreqX} ${baseFreqY}`);
+
+      // 2. 물결 감쇠 물리 법칙 (Lifespan 설정 반영)
+      // 마우스가 나가거나 멈추면 life 수치에 맞춰 부드럽게 감쇠(Lerp)합니다.
+      const easeFactor = 1 / (lifeSetting * 10);
+      currentScale += (targetScale - currentScale) * easeFactor;
+
+      // 3. 필터에 최종 수치 주입
+      displacementMap.setAttribute('scale', currentScale.toFixed(2));
+
+      animationFrameId = requestAnimationFrame(render);
+    }
+  })();
+</script>
             </div>
         </section>
     </main>
