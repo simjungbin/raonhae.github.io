@@ -11,112 +11,161 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Serif:wght@500&display=swap" rel="stylesheet">
 </head>
-<div id="blob-cursor"></div>
+<div id="bubble-cluster-container"></div>
 
 <style>
-  /* Tunable parameters via CSS Custom Properties */
   :root {
-    --cursor-ease: 0.18;      /* range 0.05 .. 0.4 - 커서가 따라오는 부드러움 정도 */
-    --cursor-stretch: 0.012;  /* range 0 .. 0.04  - 마우스 속도에 따른 늘어남 정도 */
-    --cursor-size: 24px;      /* 커서의 기본 크기 */
-    --cursor-color: #81DBE3;  /* 요청하신 색상 */
+    --cursor-ease: 0.18; /* 중심축이 따라오는 기본 속도 */
+    
+    /* 요청하신 색상(#81DBE3) 기반의 비눗방울 스타일 정의 */
+    --bubble-edge-color: rgba(129, 219, 227, 0.75);
+    --bubble-highlight: rgba(255, 255, 255, 0.85);
+    --bubble-glow: rgba(129, 219, 227, 0.3);
+    /* 비눗방울 표면의 영롱한 오로라 빛 표현 */
+    --bubble-gradient: linear-gradient(135deg, rgba(129, 219, 227, 0.25) 0%, rgba(255, 255, 255, 0) 50%, rgba(129, 219, 227, 0.25) 100%);
   }
 
-  #blob-cursor {
+  #bubble-cluster-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: var(--cursor-size);
-    height: var(--cursor-size);
-    margin-left: calc(var(--cursor-size) / -2);
-    margin-top: calc(var(--cursor-size) / -2);
-    background-color: var(--cursor-color);
-    border-radius: 50%;
-    pointer-events: none; /* 커서가 다른 요소의 클릭을 방해하지 않도록 설정 */
+    width: 0;
+    height: 0;
+    pointer-events: none; /* 클릭 방해 금지 */
     z-index: 9999;
-    will-change: transform;
-    transform-origin: center center;
     opacity: 0;
-    /* 클릭 효과와 투명도 전환이 부드럽도록 transition 설정 */
-    transition: opacity 0.3s ease, background-color 0.2s ease;
+    /* 클릭 시 부드럽게 수축하기 위한 transition */
+    transition: opacity 0.5s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  /* 클릭했을 때 활성화될 스타일 */
-  #blob-cursor.is-clicked {
-    background-color: #5ec3cb; /* 클릭 시 약간 더 진한 민트빛으로 변경 */
+  /* 개별 비눗방울 스타일 */
+  .bubble-particle {
+    position: absolute;
+    background: transparent;
+    border: 1px solid var(--bubble-edge-color);
+    border-radius: 50%;
+    background-image: var(--bubble-gradient);
+    box-shadow: 0 0 6px var(--bubble-glow), inset 0 0 4px var(--bubble-glow);
+    transform-origin: center center;
+    will-change: transform;
   }
 
-  /* 접근성 고려: 사용자가 애니메이션 감축을 설정한 경우 정적인 커서로 대체 */
+  /* 비눗방울 내부의 흰색 반사광(하이라이트) 효과 */
+  .bubble-particle::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: 25%;
+    background-color: var(--bubble-highlight);
+    border-radius: 50%;
+    filter: blur(0.5px);
+  }
+
+  /* 클릭했을 때 전체 무리가 쫀득하게 수축하는 효과 */
+  #bubble-cluster-container.is-clicked {
+    transform: scale(0.65);
+  }
+
+  /* 접근성: 사용자가 애니메이션 감축을 설정한 경우 배제 */
   @media (prefers-reduced-motion: reduce) {
-    #blob-cursor {
-      transform: none !important;
-      border-radius: 50% !important;
-      background-color: transparent;
-      border: 2px solid var(--cursor-color);
-    }
-    #blob-cursor.is-clicked {
-      transform: none !important;
-      background-color: var(--cursor-color);
+    #bubble-cluster-container {
+      display: none;
     }
   }
 </style>
 
 <script>
   (function () {
-    // 사용자가 애니메이션 감축을 선호하는지 확인
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const cursor = document.getElementById('blob-cursor');
-    if (!cursor) return;
+    const container = document.getElementById('bubble-cluster-container');
+    if (!container) return;
 
-    // 마우스의 실제 위치
     const mouse = { x: 0, y: 0 };
-    // 커서의 현재 렌더링 위치
-    const pos = { x: 0, y: 0 };
-    // 이전 프레임에서의 위치 (속도 계산용)
-    const lastPos = { x: 0, y: 0 };
-    
     let isVisible = false;
     let isClicked = false;
     let animationFrameId = null;
 
-    // 파라미터 값 로드
-    const rootStyles = getComputedStyle(document.documentElement);
-    const ease = parseFloat(rootStyles.getPropertyValue('--cursor-ease').trim()) || 0.18;
-    const stretchFactor = parseFloat(rootStyles.getPropertyValue('--cursor-stretch').trim()) || 0.012;
+    // --- 비눗방울 무리 상세 조절 파라미터 ---
+    const bubbleCount = 12;     // 화면에 생길 비눗방울 개수
+    const baseSize = 8;        // 최소 반지름 크기 (px)
+    const sizeVariation = 16;   // 무작위로 더해질 크기 범위 (px)
+    const clusterRadius = 35;   // 마우스 주변으로 퍼지는 최대 반경
 
-    // 마우스 움직임 감지
+    const rootStyles = getComputedStyle(document.documentElement);
+    const baseEase = parseFloat(rootStyles.getPropertyValue('--cursor-ease').trim()) || 0.18;
+
+    const bubbles = [];
+
+    // 초기 비눗방울 요소들 생성 및 속성 무작위 부여
+    for (let i = 0; i < bubbleCount; i++) {
+      const el = document.createElement('div');
+      el.classList.add('bubble-particle');
+      container.appendChild(el);
+
+      // 개별 방울마다 고유의 크기, 속도, 흔들림 부여
+      const size = baseSize + Math.random() * sizeVariation;
+      const ease = baseEase * (0.5 + Math.random() * 0.8); // 방울마다 따라오는 속도 다르게
+      const wobbleSpeed = 0.04 + Math.random() * 0.08;     // 흔들리는 주기
+      const wobbleAmp = 2 + Math.random() * 6;             // 흔들리는 진폭
+
+      bubbles.push({
+        el: el,
+        size: size,
+        ease: ease,
+        wobbleSpeed: wobbleSpeed,
+        wobbleAmp: wobbleAmp,
+        wobblePhase: Math.random() * Math.PI * 2, // 흔들림 시작 타이밍 엇갈리게
+        pos: { x: 0, y: 0 },
+        // 마우스 중심점으로부터 약간씩 떨어져 있도록 오프셋 설정
+        offset: {
+          x: (Math.random() - 0.5) * clusterRadius * 2,
+          y: (Math.random() - 0.5) * clusterRadius * 2,
+        }
+      });
+
+      // 초기 크기 지정 및 중앙 정렬 세팅
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.marginLeft = `${size / -2}px`;
+      el.style.marginTop = `${size / -2}px`;
+    }
+
+    // --- 이벤트 리스너 ---
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      
+
       if (!isVisible) {
-        // 첫 움직임 때 커서를 표시하고 위치를 동기화
-        pos.x = lastPos.x = mouse.x;
-        pos.y = lastPos.y = mouse.y;
-        cursor.style.opacity = '1';
+        // 첫 마우스 진입 시 모든 방울 위치를 즉시 동기화
+        bubbles.forEach(bubble => {
+          bubble.pos.x = mouse.x;
+          bubble.pos.y = mouse.y;
+        });
+        container.style.opacity = '1';
         isVisible = true;
       }
     });
 
-    // 마우스 클릭 이벤트 트리거
+    // 클릭 이펙트 활성화/비활성화
     window.addEventListener('mousedown', () => {
       isClicked = true;
-      cursor.classList.add('is-clicked');
+      container.classList.add('is-clicked');
     });
 
     window.addEventListener('mouseup', () => {
       isClicked = false;
-      cursor.classList.remove('is-clicked');
+      container.classList.remove('is-clicked');
     });
 
-    // 화면 밖으로 마우스가 나갔을 때 처리
     document.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
+      container.style.opacity = '0';
       isVisible = false;
     });
 
-    // 성능 최적화: IntersectionObserver를 사용하여 커서가 화면에 보일 때만 루프 실행
+    // 화면에 보일 때만 루프 돌리기 (성능 최적화)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -127,37 +176,31 @@
         }
       });
     });
-    observer.observe(cursor);
+    observer.observe(container);
 
-    // 매 프레임 계산 및 렌더링 루프
-    function render() {
-      // 선형 보간(Lerp)을 통한 부드러운 추적
-      pos.x += (mouse.x - pos.x) * ease;
-      pos.y += (mouse.y - pos.y) * ease;
+    // --- 애니메이션 렌더링 루프 ---
+    function render(time) {
+      const timeSec = time * 0.001; // 밀리초를 초 단위로 변환
 
-      // 이전 프레임 대비 이동 거리(속도) 계산
-      const deltaX = pos.x - lastPos.x;
-      const deltaY = pos.y - lastPos.y;
-      const distance = Math.hypot(deltaX, deltaY);
+      bubbles.forEach(bubble => {
+        // 1. 목표 위치 계산 (마우스 좌표 + 개별 방울 고유 오프셋)
+        const targetX = mouse.x + bubble.offset.x;
+        const targetY = mouse.y + bubble.offset.y;
 
-      // 이동 방향 각도 계산 (라디안)
-      const angle = Math.atan2(deltaY, deltaX);
+        // 2. 삼각함수(Sine, Cosine)를 이용한 유기적인 출렁임(Wobble) 계산
+        const wobbleX = Math.sin(timeSec * bubble.wobbleSpeed + bubble.wobblePhase) * bubble.wobbleAmp;
+        const wobbleY = Math.cos(timeSec * bubble.wobbleSpeed + bubble.wobblePhase * 1.2) * bubble.wobbleAmp;
 
-      // 클릭 중일 때와 아닐 때의 변형 분기
-      if (isClicked) {
-        // 클릭 시: 순간적으로 사방으로 쪼그라드는 일정한 스케일 적용 (탱글한 느낌)
-        cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) rotate(${angle}rad) scale(0.6, 0.6)`;
-      } else {
-        // 평소 이동 시: 속도에 맞춰 늘어남(stretch)과 압축(squash) 비율 계산
-        const stretch = distance * stretchFactor;
-        const scaleX = 1 + stretch;
-        const scaleY = 1 / (1 + stretch);
-        cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) rotate(${angle}rad) scale(${scaleX}, ${scaleY})`;
-      }
+        const finalTargetX = targetX + wobbleX;
+        const finalTargetY = targetY + wobbleY;
 
-      // 다음 프레임을 위해 현재 위치 저장
-      lastPos.x = pos.x;
-      lastPos.y = pos.y;
+        // 3. 부드러운 추적 (Lerp)
+        bubble.pos.x += (finalTargetX - bubble.pos.x) * bubble.ease;
+        bubble.pos.y += (finalTargetY - bubble.pos.y) * bubble.ease;
+
+        // 4. 화면 반영
+        bubble.el.style.transform = `translate3d(${bubble.pos.x}px, ${bubble.pos.y}px, 0)`;
+      });
 
       animationFrameId = requestAnimationFrame(render);
     }
