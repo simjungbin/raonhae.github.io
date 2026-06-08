@@ -1,3 +1,9 @@
+// 모든 배경 영상 음소거
+document.querySelectorAll('video').forEach(video => {
+    video.muted = true;
+    video.volume = 0;
+});
+
 // Initialize animations on scroll
 document.addEventListener("DOMContentLoaded", () => {
     // Navigation active state updates
@@ -475,4 +481,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // 초기 실행
     activateIndex(0);
     onScroll();
+})();
+// --- Cassette Click Audio ---
+(function () {
+    const cassette = document.querySelector('.cassette-container');
+    const audio = document.getElementById('summerAudio');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundBtn = document.querySelector('.sound-btn');
+    if (!cassette || !audio) return;
+
+    let isPlaying = false;
+
+    function togglePlay() {
+        if (isPlaying) {
+            audio.pause();
+            isPlaying = false;
+            if (soundIcon) soundIcon.src = 'assets/off.png';
+        } else {
+            audio.play().catch(e => console.log('재생 오류:', e));
+            isPlaying = true;
+            if (soundIcon) soundIcon.src = 'assets/on.png';
+        }
+    }
+
+    cassette.addEventListener('click', togglePlay);
+    if (soundBtn) soundBtn.addEventListener('click', togglePlay);
 })();
