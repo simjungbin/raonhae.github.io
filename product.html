@@ -347,38 +347,75 @@
             </div>
         </section>
 
-        <section class="product-features">
-            <div class="features-container">
-                <h3 class="section-title">FEATURES</h3>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="./assets/8ae51a37ebb91a4965879b07ffeb16e0ebdbe081.svg" alt="Analog">
+        <section class="product-features-sticky">
+            <div class="features-sticky-container">
+                <!-- 왼쪽: 스티키 이미지 영역 -->
+                <div class="features-sticky-left">
+                    <div class="features-image-track">
+                        <div class="features-image-slide active" data-index="0">
+                            <img src="./assets/features-img-1.png" alt="아날로그 감성">
                         </div>
-                        <h4>아날로그 감성</h4>
-                        <p>디지털 시대 속, 느리게<br>감성을 남기는 아날로그 경험</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="./assets/6d86fabe06c99be1140398de33a70ed3fc17169e.svg" alt="Package">
+                        <div class="features-image-slide" data-index="1">
+                            <img src="./assets/features-img-2.png" alt="특별한 패키지">
                         </div>
-                        <h4>특별한 패키지</h4>
-                        <p>감성적인 구성품으로<br>소장 가치를 높였습니다.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="assets/playlist_story.svg" alt="Playlist">
+                        <div class="features-image-slide" data-index="2">
+                            <img src="./assets/features-img-3.png" alt="플레이리스트 스토리">
                         </div>
-                        <h4>플레이리스트 스토리</h4>
-                        <p>SIDE A와 SIDE B로<br>감정의 흐름을 담았습니다.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="./assets/5dd14a6404e9d1e8131e457a32fa50df013fd44d.svg" alt="Memory">
+                        <div class="features-image-slide" data-index="3">
+                            <img src="./assets/features-img-4.png" alt="여름 기록">
                         </div>
-                        <h4>여름 기록</h4>
-                        <p>빛바랜 순간들을<br>영원히 간직할 수 있도록.</p>
                     </div>
+                </div>
+
+                <!-- 오른쪽: 스크롤 텍스트 영역 -->
+                <div class="features-sticky-right">
+                    <div class="features-sticky-header">
+                        <span class="features-sticky-label">Features</span>
+                        <div class="features-sticky-indicator">
+                            <div class="features-indicator-dot active" data-index="0"></div>
+                            <div class="features-indicator-dot" data-index="1"></div>
+                            <div class="features-indicator-dot" data-index="2"></div>
+                            <div class="features-indicator-dot" data-index="3"></div>
+                        </div>
+                    </div>
+
+                    <div class="features-text-panels">
+                        <!-- Panel 1 -->
+                        <div class="features-text-panel active" data-index="0">
+                            <div class="feature-icon-large">
+                                <img src="./assets/8ae51a37ebb91a4965879b07ffeb16e0ebdbe081.svg" alt="Analog">
+                            </div>
+                            <h4 class="feature-panel-title">아날로그 감성</h4>
+                            <p class="feature-panel-desc">디지털 시대 속, 느리게<br>감성을 남기는 아날로그 경험</p>
+                        </div>
+                        <!-- Panel 2 -->
+                        <div class="features-text-panel" data-index="1">
+                            <div class="feature-icon-large">
+                                <img src="./assets/6d86fabe06c99be1140398de33a70ed3fc17169e.svg" alt="Package">
+                            </div>
+                            <h4 class="feature-panel-title">특별한 패키지</h4>
+                            <p class="feature-panel-desc">감성적인 구성품으로<br>소장 가치를 높였습니다.</p>
+                        </div>
+                        <!-- Panel 3 -->
+                        <div class="features-text-panel" data-index="2">
+                            <div class="feature-icon-large">
+                                <img src="assets/playlist_story.svg" alt="Playlist">
+                            </div>
+                            <h4 class="feature-panel-title">플레이리스트 스토리</h4>
+                            <p class="feature-panel-desc">SIDE A와 SIDE B로<br>감정의 흐름을 담았습니다.</p>
+                        </div>
+                        <!-- Panel 4 -->
+                        <div class="features-text-panel" data-index="3">
+                            <div class="feature-icon-large">
+                                <img src="./assets/5dd14a6404e9d1e8131e457a32fa50df013fd44d.svg" alt="Memory">
+                            </div>
+                            <h4 class="feature-panel-title">여름 기록</h4>
+                            <p class="feature-panel-desc">빛바랜 순간들을<br>영원히 간직할 수 있도록.</p>
+                        </div>
+                    </div>
+
+                    <!-- 스크롤 트리거용 더미 공간 -->
+                    <div class="features-scroll-spacer"></div>
                 </div>
             </div>
         </section>

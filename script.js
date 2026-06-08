@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Navigation active state updates
     const navLinks = document.querySelectorAll('.nav-links a');
     navLinks.forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             navLinks.forEach(a => a.classList.remove('active'));
             this.classList.add('active');
         });
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Apply animation classes
     const elementsToAnimate = [
-        '.concept-text', 
+        '.concept-text',
         '.concept-images',
         '.solution-text',
         '.solution-image-wrapper',
@@ -76,11 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productIntro) {
         const introText = productIntro.querySelector('.product-intro-text');
         const introImage = productIntro.querySelector('.product-intro-image');
-        
+
         if (introText && introImage) {
             introText.classList.add('fade-in-hidden');
             introImage.classList.add('fade-in-hidden');
-            
+
             const introObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -105,22 +105,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productFeatures) {
         const title = productFeatures.querySelector('.section-title');
         const cards = productFeatures.querySelectorAll('.feature-card');
-        
+
         if (title && cards.length > 0) {
             title.classList.add('fade-in-hidden');
             cards.forEach(card => card.classList.add('fade-in-hidden'));
-            
+
             const featuresObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         title.classList.remove('fade-in-hidden');
                         title.classList.add('fade-in-visible');
-                        
+
                         cards.forEach(card => {
                             card.classList.remove('fade-in-hidden');
                             card.classList.add('fade-in-visible');
                         });
-                        
+
                         observer.unobserve(entry.target);
                     }
                 });
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rootMargin: '0px',
                 threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
             });
-            
+
             featuresObserver.observe(productFeatures);
         }
     }
@@ -162,22 +162,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productInside) {
         const title = productInside.querySelector('.section-title');
         const cards = productInside.querySelectorAll('.inside-card');
-        
+
         if (title && cards.length > 0) {
             title.classList.add('fade-in-hidden');
             cards.forEach(card => card.classList.add('fade-in-hidden'));
-            
+
             const insideObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         title.classList.remove('fade-in-hidden');
                         title.classList.add('fade-in-visible');
-                        
+
                         cards.forEach(card => {
                             card.classList.remove('fade-in-hidden');
                             card.classList.add('fade-in-visible');
                         });
-                        
+
                         observer.unobserve(entry.target);
                     }
                 });
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rootMargin: '0px',
                 threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
             });
-            
+
             insideObserver.observe(productInside);
         }
     }
@@ -196,11 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productCta) {
         const ctaText = productCta.querySelector('.cta-text');
         const ctaActions = productCta.querySelector('.cta-actions');
-        
+
         if (ctaText && ctaActions) {
             ctaText.classList.add('fade-in-hidden');
             ctaActions.classList.add('fade-in-hidden');
-            
+
             const ctaObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rootMargin: '0px',
                 threshold: 0.25 // starts when 25% (20~30%) of the section enters the viewport
             });
-            
+
             ctaObserver.observe(productCta);
         }
     }
@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const footerContainer = footer.querySelector('.footer-container');
         if (footerContainer) {
             footerContainer.classList.add('fade-in-hidden');
-            
+
             const footerObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rootMargin: '0px',
                 threshold: 0.1 // triggers quickly when footer starts to enter
             });
-            
+
             footerObserver.observe(footer);
         }
     }
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typewriterContainer) {
         const textTarget = typewriterContainer.querySelector('.typewriter-text');
         const fullText = typewriterContainer.getAttribute('data-text') || '';
-        
+
         const getParam = (styleName, fallback) => {
             const value = getComputedStyle(typewriterContainer).getPropertyValue(styleName).trim();
             return value ? parseInt(value, 10) : fallback;
@@ -330,20 +330,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // Interactive hover physics strictly on the image itself
         floatingCassette.addEventListener('mousemove', (e) => {
             const rect = floatingCassette.getBoundingClientRect();
-            
+
             // Calculate center of the image
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            
+
             // Normalize distance from center (-1 to 1)
             const deltaX = (e.clientX - centerX) / (rect.width / 2);
             const deltaY = (e.clientY - centerY) / (rect.height / 2);
-            
+
             // Push away from mouse (max 10px translate, 2deg rotate)
             const moveX = -(deltaX * 10);
             const moveY = -(deltaY * 10);
             const rotate = -(deltaX * 2);
-            
+
             cassetteContainer.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
         });
 
@@ -410,3 +410,69 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// --- Features Sticky Scroll ---
+(function () {
+    const section = document.querySelector('.product-features-sticky');
+    if (!section) return;
+
+    const panels = section.querySelectorAll('.features-text-panel');
+    const imageSlides = section.querySelectorAll('.features-image-slide');
+    const dots = section.querySelectorAll('.features-indicator-dot');
+    const totalPanels = panels.length;
+    let currentIndex = -1;
+
+    // 섹션 높이를 패널 수 × 100vh로 설정
+    section.style.height = (totalPanels * window.innerHeight) + 'px';
+
+    function activateIndex(index) {
+        if (index === currentIndex) return;
+        const prev = currentIndex;
+        currentIndex = index;
+
+        panels.forEach((p, i) => {
+            p.classList.remove('active', 'exit-up');
+            if (i === index) {
+                p.classList.add('active');
+            } else if (i === prev && prev < index) {
+                p.classList.add('exit-up');
+            }
+        });
+
+        imageSlides.forEach((s, i) => {
+            s.classList.toggle('active', i === index);
+        });
+
+        dots.forEach((d, i) => {
+            d.classList.toggle('active', i === index);
+        });
+    }
+
+    function onScroll() {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = -rect.top; // 섹션 상단이 뷰포트 위로 얼마나 올라갔는지
+        const scrollableHeight = section.offsetHeight - window.innerHeight;
+
+        if (sectionTop <= 0) {
+            activateIndex(0);
+            return;
+        }
+        if (sectionTop >= scrollableHeight) {
+            activateIndex(totalPanels - 1);
+            return;
+        }
+
+        const index = Math.floor((sectionTop / scrollableHeight) * totalPanels);
+        activateIndex(Math.min(index, totalPanels - 1));
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+        section.style.height = (totalPanels * window.innerHeight) + 'px';
+        onScroll();
+    });
+
+    // 초기 실행
+    activateIndex(0);
+    onScroll();
+})();
