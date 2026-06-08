@@ -260,13 +260,22 @@
             <!-- Background Orbit Line -->
             <div class="orbit-container">
                 <svg viewBox="0 0 1200 400" class="orbit-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 큰 타원 orbit -->
                     <ellipse cx="600" cy="200" rx="550" ry="140" stroke="rgba(255, 255, 255, 0.5)" stroke-width="1"
                         stroke-dasharray="3 6" />
-                    <!-- Star left -->
+                    <!-- click to play 작은 타원 -->
+                    <ellipse cx="240" cy="193" rx="70" ry="22" stroke="rgba(255, 255, 255, 0.5)" stroke-width="1"
+                        stroke-dasharray="3 6" fill="none" />
+                    <!-- click to play 텍스트 -->
+                    <text x="240" y="197" font-family="Caveat, cursive" font-size="18" fill="white" opacity="0.9"
+                        text-anchor="middle">click to play</text>
+                    <!-- 곡선 화살표 -->
+                    <path class="curly-arrow" d="M 318 185 C 338 178, 365 172, 378 182" stroke="rgba(255,255,255,0.75)"
+                        stroke-width="1.2" fill="none" stroke-linecap="round" />
+
                     <path class="orbit-star" style="transform-origin: 50px 200px;"
                         d="M 50 200 L 55 190 L 60 200 L 70 205 L 60 210 L 55 220 L 50 210 L 40 205 Z" fill="none"
                         stroke="white" stroke-width="1" transform="scale(0.8) translate(10, 40)" />
-                    <!-- Star right -->
                     <path class="orbit-star" style="transform-origin: 1133px 183px; animation-delay: 0.5s;"
                         d="M 1130 180 L 1133 175 L 1136 180 L 1141 183 L 1136 186 L 1133 191 L 1130 186 L 1125 183 Z"
                         fill="none" stroke="white" stroke-width="1" />

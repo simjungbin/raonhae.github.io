@@ -527,3 +527,18 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(el);
     });
 })();
+// --- Curly Arrow Draw Effect ---
+(function () {
+    const arrow = document.querySelector('.curly-arrow');
+    if (!arrow) return;
+
+    const arrowLength = arrow.getTotalLength();
+
+    arrow.style.strokeDasharray = arrowLength;
+    arrow.style.strokeDashoffset = arrowLength;
+
+    setTimeout(() => {
+        arrow.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        arrow.style.strokeDashoffset = '0';
+    }, 800);
+})();

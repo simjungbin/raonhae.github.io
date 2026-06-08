@@ -1275,8 +1275,6 @@ a {
 
 /* Product Inside */
 
-/* Product Inside */
-
 .product-inside {
     padding: 100px 0;
 }
@@ -2456,4 +2454,60 @@ a {
 .highlight-role {
     background: linear-gradient(transparent 40%, rgba(196, 238, 242, 0.7) 40%);
     padding: 0 2px;
+}
+
+/* --- Click to Play Bubble --- */
+.click-to-play-bubble {
+    position: absolute;
+    left: 18%;
+    top: 42%;
+    transform: translateY(-50%);
+    z-index: 10;
+    animation: float 6s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.click-to-play-bubble span {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    display: inline-block;
+    padding: 10px 24px;
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* 말풍선 오른쪽으로 이어지는 선 */
+.click-to-play-bubble::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+}
+
+/* --- Curly Arrow Animation --- */
+.curly-arrow {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform-origin: 315px 193px;
+}
+
+.cassette-container:hover .curly-arrow {
+    opacity: 0.5;
+}
+
+/* click to play 버블 호버 효과 */
+.orbit-container {
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cassette-container:hover .orbit-container {
+    transform: translate(-50%, -50%) scale(1.02);
 }
