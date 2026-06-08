@@ -2320,9 +2320,9 @@ a {
 
 .feature-panel-desc {
     font-family: var(--font-body);
-    font-size: 16px;
+    font-size: 15px;
     color: #516174;
-    line-height: 1.7;
+    line-height: 1.8;
     margin: 0;
 }
 
