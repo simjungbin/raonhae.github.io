@@ -367,95 +367,72 @@
 
     <main>
         <section class="concept-section" id="concept">
-           <div class="concept-images fade-in-hidden fade-in-visible">
-    <!-- 화면 상 1번째 이미지 (원래 구조 유지 + 초기 활성화 클래스 장착) -->
-    <div class="img-3-wrapper concept-card-wrapper is-initial-active">
+           <div class="concept-images fade-in-hidden fade-in-visible" id="concept-container">
+    <div class="img-3-wrapper concept-interactive-item is-initial-active" data-item-id="3">
         <img src="assets/8c4c92970805c58f7ee122984a540a96c754a799.png" alt="Concept 3" class="img-3">
     </div>
 
-    <!-- 2번째 이미지 (1번째와 완전히 동일하게 wrapper 박스 구조로 래핑) -->
-    <div class="img-1-wrapper concept-card-wrapper">
-        <img src="assets/2a6488eec6d44b9fc6bb8b5949f3eaa983549ffa.png" alt="Concept 1" class="img-1">
-    </div>
+    <img src="assets/2a6488eec6d44b9fc6bb8b5949f3eaa983549ffa.png" alt="Concept 1" class="img-1 concept-interactive-item" data-item-id="1">
     
-    <!-- 3번째 이미지 (1번째와 완전히 동일하게 wrapper 박스 구조로 래핑) -->
-    <div class="img-2-wrapper concept-card-wrapper">
-        <img src="assets/ed028be7a8d6a1eb6e5fb79671bec9003bc5aef0.png" alt="Concept 2" class="img-2">
-    </div>
+    <img src="assets/ed028be7a8d6a1eb6e5fb79671bec9003bc5aef0.png" alt="Concept 2" class="img-2 concept-interactive-item" data-item-id="2">
 </div>
 
 <style>
   /* -----------------------------------------
-     [공통 효과 설정] 모든 카드의 움직임 메커니즘 통일
+     [공통 효과 설정] 기존 배치를 100% 유지하는 애니메이션 스펙
   ----------------------------------------- */
-  .concept-card-wrapper {
-    /* 기존 CSS 파일에 선언되어 있을 .img-1-wrapper, .img-2-wrapper, .img-3-wrapper의 
-       절대 좌표(position, top, left, transform)와 완벽하게 하이브리드로 결합됩니다. */
+  .concept-interactive-item {
+    /* 기존 CSS 파일에 있는 .img-1, .img-2, .img-3-wrapper의 위치/크기 값과 부드럽게 결합됩니다 */
     transition: 
       filter 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
       opacity 0.45s ease,
       scale 0.45s cubic-bezier(0.25, 1, 0.5, 1),
-      z-index 0s;
+      z-index 0.1s ease;
     will-change: filter, opacity, scale;
-  }
-
-  /* 내부 이미지 태그들이 박스 안에서 어색하게 삐져나가지 않도록 채우기 */
-  .concept-card-wrapper img {
-    width: 100%;
-    height: 100%;
-    display: block;
   }
 
   /* -----------------------------------------
      [기본 상태] 마우스가 영역 밖에 있을 때
   ----------------------------------------- */
   
-  /* 주인공인 1번째 이미지(img-3-wrapper)를 제외한 나머지 카드들은 블러 처리 및 대기 */
-  .concept-card-wrapper:not(.is-initial-active) {
+  /* 주인공인 1번째 이미지(is-initial-active)를 제외한 나머지 카드는 블러 및 투명도 대기 */
+  .concept-interactive-item:not(.is-initial-active) {
     filter: blur(5px);
     opacity: 0.65;
-    z-index: 5;
   }
 
   /* 1번째 이미지는 처음 진입 시 블러 없이 가장 선명하고 돋보이게 설정 */
-  .concept-card-wrapper.is-initial-active {
+  .concept-interactive-item.is-initial-active {
     filter: blur(0px);
     opacity: 1;
     scale: 1.03; /* 주인공 느낌으로 아주 살짝 확장 */
-    z-index: 15;
+    /* 기존 배치상 z-index가 꼬이지 않도록, 활성화 상태일 때 최상단으로 오게 유도 */
+    z-index: 40 !important; 
   }
-
 
   /* -----------------------------------------
-     [인터랙션 상태] 마우스 호버 시 실시간 전환
+     [인터랙션 상태] 마우스 호버 시 실시간 클래스 제어
   ----------------------------------------- */
 
-  /* 마우스가 전체 구역에 들어오는 즉시 1번째 카드의 독점 상태를 풀고 공평하게 경쟁하도록 전환 */
-  .concept-images:hover .concept-card-wrapper.is-initial-active {
-    filter: blur(5px);
-    opacity: 0.65;
-    scale: 1;
-    z-index: 5;
-  }
-
-  /* [수정] 현재 마우스가 올라간(Hover) 박스 - 1번째 카드가 보여주던 부드러운 스케일 업 대입 */
-  .concept-images .concept-card-wrapper:hover {
+  /* 자바스크립트로 주입될 '직접 호버된' 대상의 스타일 (1번 카드와 완벽히 똑같은 쫀득함 대입) */
+  .concept-interactive-item.is-hovered-target {
     filter: blur(0px) !important;
     opacity: 1 !important;
-    scale: 1.08 !important; /* 원래 위치 배치(transform)를 보존하면서 쫀득하게 확대 */
-    z-index: 30 !important;  /* 호버된 카드가 레이어 최상단으로 등극 */
+    scale: 1.08 !important; /* 본래 위치를 보존하면서 크기만 중심축 기준으로 확대 */
+    z-index: 50 !important;  /* 호버된 카드가 무조건 레이어 최상단 */
   }
 
   /* 어떤 카드가 선택되었을 때, 선택받지 못하고 아웃포커싱되는 나머지 주변 카드들 */
-  .concept-images:hover .concept-card-wrapper:not(:hover) {
+  .concept-interactive-item.is-blurred-sibling {
     filter: blur(6px) !important;
     opacity: 0.42 !important;
-    scale: 0.94 !important; /* 살짝 수축하면서 시각적 심도 표현 */
+    scale: 0.94 !important; /* 살짝 수축하며 깊이감 표현 */
+    z-index: 10 !important;
   }
 
   /* 접근성 대응 */
   @media (prefers-reduced-motion: reduce) {
-    .concept-card-wrapper {
+    .concept-interactive-item {
       filter: none !important;
       opacity: 1 !important;
       scale: 1 !important;
@@ -463,6 +440,49 @@
     }
   }
 </style>
+
+<script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const container = document.getElementById('concept-container');
+    const items = document.querySelectorAll('.concept-interactive-item');
+    
+    if (!container || items.length === 0) return;
+
+    items.forEach(item => {
+      // 마우스가 특정 이미지에 올라갔을 때
+      item.addEventListener('mouseenter', () => {
+        items.forEach(el => {
+          // 1. 모든 요소에서 초기 활성화 상태와 이전 호버 상태 제거
+          el.classList.remove('is-initial-active');
+          el.classList.remove('is-hovered-target');
+          el.classList.remove('is-blurred-sibling');
+          
+          // 2. 현재 올린 마우스 대상과 주변 대상 분리해서 클래스 부여
+          if (el === item) {
+            el.classList.add('is-hovered-target');
+          } else {
+            el.classList.add('is-blurred-sibling');
+          }
+        });
+      });
+    });
+
+    // 마우스가 전체 컨테이너 영역을 완전히 벗어나면 다시 1번 이미지 활성화 상태로 롤백
+    container.addEventListener('mouseleave', () => {
+      items.forEach(el => {
+        el.classList.remove('is-hovered-target');
+        el.classList.remove('is-blurred-sibling');
+        
+        // 원래 1번째 이미지(data-item-id="3")만 다시 활성화
+        if (el.getAttribute('data-item-id') === '3') {
+          el.classList.add('is-initial-active');
+        }
+      });
+    });
+  })();
+</script>
             <div class="concept-text">
                 <div class="concept-header">
                     <span class="concept-label">Problem</span>
