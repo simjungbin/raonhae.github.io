@@ -379,15 +379,16 @@
 
 <style>
   /* -----------------------------------------
-     [공통 효과 설정] 기존 배치를 100% 유지하는 애니메이션 스펙
+     [방해 요소 제거 및 애니메이션 통일] 
+     !important를 사용해 기존 CSS 파일의 무거운 transition을 강제로 지우고 
+     1번 이미지와 똑같은 고속/부드러운 스펙을 강제 이식합니다.
   ----------------------------------------- */
   .concept-interactive-item {
-    /* 기존 CSS 파일에 있는 .img-1, .img-2, .img-3-wrapper의 위치/크기 값과 부드럽게 결합됩니다 */
     transition: 
-      filter 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
-      opacity 0.45s ease,
-      scale 0.45s cubic-bezier(0.25, 1, 0.5, 1),
-      z-index 0.1s ease;
+      filter 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important, 
+      opacity 0.45s ease !important,
+      scale 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important,
+      z-index 0s linear !important;
     will-change: filter, opacity, scale;
   }
 
@@ -395,38 +396,38 @@
      [기본 상태] 마우스가 영역 밖에 있을 때
   ----------------------------------------- */
   
-  /* 주인공인 1번째 이미지(is-initial-active)를 제외한 나머지 카드는 블러 및 투명도 대기 */
+  /* 1번째 이미지(is-initial-active)를 제외한 나머지 카드는 블러 및 투명도 대기 */
   .concept-interactive-item:not(.is-initial-active) {
-    filter: blur(5px);
-    opacity: 0.65;
+    filter: blur(5px) !important;
+    opacity: 0.65 !important;
+    scale: 1 !important;
   }
 
-  /* 1번째 이미지는 처음 진입 시 블러 없이 가장 선명하고 돋보이게 설정 */
+  /* 1번째 이미지는 처음 진입 시 블러 없이 가장 선명하고 부드럽게 확장 */
   .concept-interactive-item.is-initial-active {
-    filter: blur(0px);
-    opacity: 1;
-    scale: 1.03; /* 주인공 느낌으로 아주 살짝 확장 */
-    /* 기존 배치상 z-index가 꼬이지 않도록, 활성화 상태일 때 최상단으로 오게 유도 */
+    filter: blur(0px) !important;
+    opacity: 1 !important;
+    scale: 1.03 !important; /* 원래 크기에서 부드럽게 3% 확장 */
     z-index: 40 !important; 
   }
 
   /* -----------------------------------------
-     [인터랙션 상태] 마우스 호버 시 실시간 클래스 제어
+     [인터랙션 상태] 마우스 호버 시 실시간 크로스페이드
   ----------------------------------------- */
 
-  /* 자바스크립트로 주입될 '직접 호버된' 대상의 스타일 (1번 카드와 완벽히 똑같은 쫀득함 대입) */
+  /* 마우스가 직접 올라간(Hover) 핵심 카드 스타일 (1번 카드 특유의 쫀득한 가속도 무조건 강제 이식) */
   .concept-interactive-item.is-hovered-target {
     filter: blur(0px) !important;
     opacity: 1 !important;
-    scale: 1.08 !important; /* 본래 위치를 보존하면서 크기만 중심축 기준으로 확대 */
+    scale: 1.08 !important; /* 위치를 보존하며 1번 카드처럼 부드럽게 8% 확대 */
     z-index: 50 !important;  /* 호버된 카드가 무조건 레이어 최상단 */
   }
 
-  /* 어떤 카드가 선택되었을 때, 선택받지 못하고 아웃포커싱되는 나머지 주변 카드들 */
+  /* 선택받지 못하고 주변에서 아웃포커싱되는 나머지 카드들의 후퇴 모션 */
   .concept-interactive-item.is-blurred-sibling {
     filter: blur(6px) !important;
     opacity: 0.42 !important;
-    scale: 0.94 !important; /* 살짝 수축하며 깊이감 표현 */
+    scale: 0.94 !important; /* 살짝 줄어들 때도 1번 카드와 똑같은 속도로 축소 */
     z-index: 10 !important;
   }
 
@@ -451,15 +452,13 @@
     if (!container || items.length === 0) return;
 
     items.forEach(item => {
-      // 마우스가 특정 이미지에 올라갔을 때
+      // 마우스가 카드를 스쳐 지나가거나 올라갔을 때 즉시 반응하도록 이벤트를 정밀화합니다
       item.addEventListener('mouseenter', () => {
         items.forEach(el => {
-          // 1. 모든 요소에서 초기 활성화 상태와 이전 호버 상태 제거
           el.classList.remove('is-initial-active');
           el.classList.remove('is-hovered-target');
           el.classList.remove('is-blurred-sibling');
           
-          // 2. 현재 올린 마우스 대상과 주변 대상 분리해서 클래스 부여
           if (el === item) {
             el.classList.add('is-hovered-target');
           } else {
@@ -469,13 +468,12 @@
       });
     });
 
-    // 마우스가 전체 컨테이너 영역을 완전히 벗어나면 다시 1번 이미지 활성화 상태로 롤백
+    // 마우스가 완전히 구역을 나가면 부드럽게 1번 이미지 초기 상태로 리턴
     container.addEventListener('mouseleave', () => {
       items.forEach(el => {
         el.classList.remove('is-hovered-target');
         el.classList.remove('is-blurred-sibling');
         
-        // 원래 1번째 이미지(data-item-id="3")만 다시 활성화
         if (el.getAttribute('data-item-id') === '3') {
           el.classList.add('is-initial-active');
         }
