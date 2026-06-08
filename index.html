@@ -241,13 +241,12 @@
     </div>
     <div class="hero-content">
         <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">
-            <span class="typewriter-text">영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록</span>
+            <span class="typewriter-text"></span>
         </h1>
     </div>
 </header>
 
 <style>
-  /* 히어로 영역 기본 스펙 설정 */
   .hero {
     position: relative;
     width: 100%;
@@ -256,7 +255,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: #ffffff; /* [수정] 영상이 가려져 있을 때의 기본 배경색: 흰색 */
+    background-color: #ffffff; /* 가려져 있을 때의 기본 배경색 (흰색) */
   }
 
   .hero-bg {
@@ -268,7 +267,7 @@
     z-index: 1;
   }
 
-  /* [핵심] 좌우로 갈라질 스크린 마스크 */
+  /* 좌우로 갈라질 스크린 마스크 기본 세팅 */
   .split-screen-mask {
     position: absolute;
     top: 0;
@@ -276,15 +275,15 @@
     width: 100%;
     height: 100%;
     
-    /* [수정] 처음에는 가운데 세로 한 줄(너비 0% 영역)만 영상이 보이도록 닫아둡니다 (나머지는 흰 배경) */
+    /* 처음에는 가운데 세로 한 줄(너비 0% 영역)만 보이도록 가려둠 */
     clip-path: inset(0 50% 0 50%); 
     
-    /* 자바스크립트로 클래스가 붙으면 0.85초 동안 쫀득하고 웅장하게 열립니다 */
-    transition: clip-path 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+    /* 글자 완성 후 1초 동안 웅장하게 열리도록 transition 설정 */
+    transition: clip-path 1.0s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: clip-path;
   }
 
-  /* 스크롤이 감지되어 이 클래스가 붙는 순간 좌우 0%까지 마스크가 쫙 갈라지며 열립니다 */
+  /* 타이핑 완료 시 스크립트로 추가될 클래스 (장막 개방) */
   .split-screen-mask.is-opened {
     clip-path: inset(0 0% 0 0%);
   }
@@ -304,7 +303,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.15); /* 영상 위 흰 글씨 가독성 확보 */
+    background: rgba(0, 0, 0, 0.15); /* 영상 위 글씨 가독성 확보 */
     z-index: 2;
   }
 
@@ -313,8 +312,8 @@
     z-index: 3;
     text-align: center;
     color: #fff;
-    /* 처음 흰 배경일 때는 글자가 안 보이다가, 영상이 열릴 때 글자도 자연스럽게 뜨도록 믹스 블렌드 혹은 컬러 지정 */
-    mix-blend-mode: difference; /* 흰 배경에선 검은글씨, 영상 위에선 흰글씨로 반전되는 감성 연출 */
+    /* 흰 배경일 땐 검은색, 영상이 열리면 흰색으로 반전 */
+    mix-blend-mode: difference; 
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -329,38 +328,40 @@
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    const typewriterEl = document.getElementById('typewriter');
+    const textTarget = typewriterEl ? typewriterEl.querySelector('.typewriter-text') : null;
     const mask = document.getElementById('video-mask');
-    if (!mask) return;
+    
+    if (!typewriterEl || !textTarget || !mask) return;
 
-    let hasTriggered = false;
+    // data-text 속성에서 출력할 전체 문장 가져오기
+    const fullText = typewriterEl.getAttribute('data-text') || "";
+    let currentCharIndex = 0;
+    
+    // 타이핑 속도 조절 (밀리초 단위, 숫자가 작을수록 빨라집니다)
+    const typingSpeed = 90; 
 
-    // 사용자가 마우스 휠을 굴리거나 터치 스크롤을 시작할 때 즉시 감지
-    function triggerOpening() {
-      if (!hasTriggered) {
-        hasTriggered = true;
-        mask.classList.add('is-opened'); // 마스크 개방 클래스 투입
-        
-        // 한번 작동하면 성능을 위해 리스너 제거
-        window.removeEventListener('wheel', triggerOpening);
-        window.removeEventListener('touchmove', triggerOpening);
+    // 타자기 함수 정의
+    function typeEffect() {
+      if (currentCharIndex < fullText.length) {
+        // 한 글자씩 추가
+        textTarget.textContent += fullText.charAt(currentCharIndex);
+        currentCharIndex++;
+        setTimeout(typeEffect, typingSpeed);
+      } else {
+        // [핵심] 글자 타이핑이 완전히 끝났을 때 발동하는 구역
+        setTimeout(() => {
+          mask.classList.add('is-opened'); // 0.3초 여운을 준 후 화면 좌우로 갈라짐 시작
+        }, 300);
       }
     }
 
-    // 마우스 휠 및 모바일 터치 액션에 즉각 반응하도록 대기
-    window.addEventListener('wheel', triggerOpening, { passive: true });
-    window.addEventListener('touchmove', triggerOpening, { passive: true });
-
-    // 혹시 사용자가 휠을 안 굴리고 아래 방향키 등으로 스크롤을 내릴 경우를 대비한 보조 센서
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        // 첫 진입 후 화면에 미세한 변화(스크롤)가 포착되면 바로 실행
-        if (entry.intersectionRatio < 1 && !hasTriggered) {
-          triggerOpening();
-        }
-      });
-    }, { threshold: [0.99] });
-
-    observer.observe(document.getElementById('cinema-trigger-hero'));
+    // 페이지 로드 후 즉시 타자기 이펙트 시작
+    window.addEventListener('DOMContentLoaded', () => {
+      // 기존에 다른 자바스크립트 타자기 기능이 실행 중이라면 겹치지 않게 초기화 후 시작합니다.
+      textTarget.textContent = "";
+      typeEffect();
+    });
   })();
 </script>
 
