@@ -229,15 +229,15 @@
         </div>
     </nav>
 
-    <header class="hero" id="movie-cinema-hero">
+    <header class="hero" id="cinema-trigger-hero">
     <div class="hero-bg">
-        <div class="cinema-screen-mask">
+        <div class="split-screen-mask" id="video-mask">
             <video autoplay muted loop playsinline>
                 <source src="assets/raonhea_ad.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
+            <div class="hero-overlay"></div>
         </div>
-        <div class="hero-overlay"></div>
     </div>
     <div class="hero-content">
         <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">
@@ -247,12 +247,7 @@
 </header>
 
 <style>
-  /* 효과를 테스트하기 위해 전체 스크롤 타임라인 생성 설정 */
-  html {
-    scroll-timeline: --page-scroll y;
-  }
-
-  /* 히어로 영역 스타일 (화면 고정) */
+  /* 히어로 영역 기본 스펙 설정 */
   .hero {
     position: relative;
     width: 100%;
@@ -261,7 +256,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: #000; /* 영상이 채워지기 전 기본 배경색 (시네마틱한 블랙) */
+    background-color: #ffffff; /* [수정] 영상이 가려져 있을 때의 기본 배경색: 흰색 */
   }
 
   .hero-bg {
@@ -273,25 +268,30 @@
     z-index: 1;
   }
 
-  /* [핵심] 영화 스크린 마스크 레이어 */
-  .cinema-screen-mask {
+  /* [핵심] 좌우로 갈라질 스크린 마스크 */
+  .split-screen-mask {
     position: absolute;
-    bottom: 0; /* 아래서부터 채워지도록 기준점을 바닥에 고정 */
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     
-    /* 애니메이션 설정: 스크롤 타임라인과 연동 */
-    animation: fillVideoScreen linear both;
-    animation-timeline: --page-scroll;
-    /* 스크롤의 시작(0%)부터 화면 한 바퀴(100vh)를 내릴 때까지만 애니메이션 작동 */
-    animation-range: entry 0% exit 100vh; 
+    /* [수정] 처음에는 가운데 세로 한 줄(너비 0% 영역)만 영상이 보이도록 닫아둡니다 (나머지는 흰 배경) */
+    clip-path: inset(0 50% 0 50%); 
+    
+    /* 자바스크립트로 클래스가 붙으면 0.85초 동안 쫀득하고 웅장하게 열립니다 */
+    transition: clip-path 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: clip-path;
   }
 
-  .cinema-screen-mask video {
+  /* 스크롤이 감지되어 이 클래스가 붙는 순간 좌우 0%까지 마스크가 쫙 갈라지며 열립니다 */
+  .split-screen-mask.is-opened {
+    clip-path: inset(0 0% 0 0%);
+  }
+
+  .split-screen-mask video {
     position: absolute;
-    bottom: 0; /* 비디오 자체도 하단 정렬하여 잘리지 않게 고정 */
+    top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
@@ -304,7 +304,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2); /* 영상이 너무 밝아 글자가 안 보이는 것을 방지 */
+    background: rgba(0, 0, 0, 0.15); /* 영상 위 흰 글씨 가독성 확보 */
     z-index: 2;
   }
 
@@ -313,31 +313,56 @@
     z-index: 3;
     text-align: center;
     color: #fff;
+    /* 처음 흰 배경일 때는 글자가 안 보이다가, 영상이 열릴 때 글자도 자연스럽게 뜨도록 믹스 블렌드 혹은 컬러 지정 */
+    mix-blend-mode: difference; /* 흰 배경에선 검은글씨, 영상 위에선 흰글씨로 반전되는 감성 연출 */
   }
 
-  /* [스크롤 애니메이션 정의] 
-    처음(from)에는 높이가 0%였다가 스크롤을 내리면 100%로 가득 찹니다.
-  */
-  @keyframes fillVideoScreen {
-    from {
-      height: 0%;
-      opacity: 0;
-    }
-    to {
-      height: 100%;
-      opacity: 1;
-    }
-  }
-
-  /* 접근성 고려: 사용자가 애니메이션 감축을 선호하면 효과를 끄고 꽉 찬 영상 제공 */
   @media (prefers-reduced-motion: reduce) {
-    .cinema-screen-mask {
-      height: 100% !important;
-      opacity: 1 !important;
-      animation: none !important;
+    .split-screen-mask {
+      clip-path: inset(0 0% 0 0%) !important;
+      transition: none !important;
     }
   }
 </style>
+
+<script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const mask = document.getElementById('video-mask');
+    if (!mask) return;
+
+    let hasTriggered = false;
+
+    // 사용자가 마우스 휠을 굴리거나 터치 스크롤을 시작할 때 즉시 감지
+    function triggerOpening() {
+      if (!hasTriggered) {
+        hasTriggered = true;
+        mask.classList.add('is-opened'); // 마스크 개방 클래스 투입
+        
+        // 한번 작동하면 성능을 위해 리스너 제거
+        window.removeEventListener('wheel', triggerOpening);
+        window.removeEventListener('touchmove', triggerOpening);
+      }
+    }
+
+    // 마우스 휠 및 모바일 터치 액션에 즉각 반응하도록 대기
+    window.addEventListener('wheel', triggerOpening, { passive: true });
+    window.addEventListener('touchmove', triggerOpening, { passive: true });
+
+    // 혹시 사용자가 휠을 안 굴리고 아래 방향키 등으로 스크롤을 내릴 경우를 대비한 보조 센서
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        // 첫 진입 후 화면에 미세한 변화(스크롤)가 포착되면 바로 실행
+        if (entry.intersectionRatio < 1 && !hasTriggered) {
+          triggerOpening();
+        }
+      });
+    }, { threshold: [0.99] });
+
+    observer.observe(document.getElementById('cinema-trigger-hero'));
+  })();
+</script>
 
     <main>
         <section class="concept-section" id="concept">
