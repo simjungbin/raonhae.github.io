@@ -368,86 +368,85 @@
     <main>
         <section class="concept-section" id="concept">
            <div class="concept-images fade-in-hidden fade-in-visible">
-    <div class="img-card-wrapper img-1-wrapper">
-        <img src="assets/2a6488eec6d44b9fc6bb8b5949f3eaa983549ffa.png" alt="Concept 1" class="img-1">
-    </div>
+    <img src="assets/2a6488eec6d44b9fc6bb8b5949f3eaa983549ffa.png" alt="Concept 1" class="img-1 concept-card-item">
     
-    <div class="img-card-wrapper img-2-wrapper">
-        <img src="assets/ed028be7a8d6a1eb6e5fb79671bec9003bc5aef0.png" alt="Concept 2" class="img-2">
-    </div>
+    <img src="assets/ed028be7a8d6a1eb6e5fb79671bec9003bc5aef0.png" alt="Concept 2" class="img-2 concept-card-item">
     
-    <div class="img-card-wrapper img-3-wrapper is-initial-active">
+    <div class="img-3-wrapper concept-card-item is-initial-active">
         <img src="assets/8c4c92970805c58f7ee122984a540a96c754a799.png" alt="Concept 3" class="img-3">
     </div>
 </div>
 
 <style>
-  /* 모든 카드 래퍼들의 공통 애니메이션 및 기본 배치 속성 */
-  .img-card-wrapper {
-    position: relative;
-    display: inline-block;
-    /* 블러, 크기, 위치 변화가 0.45초 동안 쫀득하고 부드럽게 일어나도록 설정 */
+  /* -----------------------------------------
+     [공통 효과 설정] 기존 배치를 깨뜨리지 않는 핵심 CSS
+  ----------------------------------------- */
+  .concept-card-item {
+    /* 원래 .img-1, .img-2, .img-3-wrapper 등이 가지고 있던 
+       position, top, left, transform 값과 부드럽게 융합되도록 transition 설정 */
     transition: 
-      filter 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
-      transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
-      opacity 0.45s ease,
-      z-index 0s;
-    will-change: filter, transform, opacity;
+      filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+      opacity 0.4s ease,
+      /* 기존 배치용 transform 값과 겹치지 않게 scale만 독립 제어하기 위해 
+         최신 CSS 기능인 individual transform properties(scale) 사용 */
+      scale 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+      z-index 0s; 
   }
 
   /* -----------------------------------------
-     [기본 상태] 마우스가 아무것도 건드리지 않았을 때
+     [기본 상태] 마우스가 영역 밖에 있을 때
   ----------------------------------------- */
   
-  /* 1번, 2번 카드는 기본적으로 블러가 걸려있고 살짝 뒤에 배치됩니다. */
-  .img-card-wrapper:not(.is-initial-active) {
+  /* 3번 이미지(또는 래퍼)를 제외한 나머지 1, 2번은 본래 배치 상태에서 블러가 걸립니다. */
+  .concept-card-item:not(.is-initial-active) {
     filter: blur(5px);
     opacity: 0.65;
-    z-index: 1;
+    /* 본래 style 시트의 z-index보다 낮게 설정되어 뒤로 깔리게 유도 (필요시 숫자 조절) */
+    z-index: 5; 
   }
 
-  /* 3번 카드는 초기 활성화 상태이므로 블러 없이 가장 선명하고 앞에 나옵니다. */
-  .img-card-wrapper.is-initial-active {
+  /* 3번 이미지는 초기 주인공 상태이므로 블러 없이 맑고 가장 앞으로 나옵니다. */
+  .concept-card-item.is-initial-active {
     filter: blur(0px);
     opacity: 1;
-    z-index: 10;
-    transform: scale(1.03); /* 주인공 느낌으로 아주 살짝 확장 */
+    scale: 1.03; /* 원래 크기에서 아주 살짝만 강조 */
+    z-index: 15; /* 가장 위에 오도록 레이어 순서 지정 */
   }
 
 
   /* -----------------------------------------
-     [인터랙션 상태] 마우스 호버가 시작되었을 때
+     [인터랙션 상태] 마우스 호버 시 실시간 전환
   ----------------------------------------- */
 
-  /* 컨테이너에 마우스가 들어오는 순간, 3번 카드가 쥐고 있던 기본 활성화 룰을 일시 해제합니다. */
-  .concept-images:hover .img-card-wrapper.is-initial-active {
+  /* 전체 영역에 마우스가 들어오는 순간, 3번이 가지고 있던 기본 활성화 룰을 걷어냅니다. */
+  .concept-images:hover .concept-card-item.is-initial-active {
     filter: blur(5px);
     opacity: 0.65;
-    z-index: 1;
-    transform: scale(1);
+    scale: 1;
+    z-index: 5;
   }
 
-  /* 사용자가 손가락이나 마우스로 직접 '올려놓은(Hover)' 바로 그 카드 처리 */
-  .concept-images .img-card-wrapper:hover {
-    filter: blur(0px) !important;       /* 가차없이 블러를 완전히 해제 */
-    opacity: 1 !important;              /* 선명도 100% */
-    transform: scale(1.08) translateY(-8px) !important; /* 위로 살짝 떠오르며 스케일 업 */
-    z-index: 20 !important;             /* 어떤 카드든 호버된 카드가 무조건 가장 맨 위 레이어로 튀어나옴 */
+  /* 현재 마우스가 직접 올라간(Hover) 카드 효과 */
+  .concept-images .concept-card-item:hover {
+    filter: blur(0px) !important;
+    opacity: 1 !important;
+    scale: 1.06 !important; /* 본래 위치(transform)를 유지한 채 크기만 쏙 커집니다 */
+    z-index: 30 !important;  /* 호버된 카드가 무조건 가장 최상단 레이어로 정복 */
   }
 
-  /* 어떤 카드가 호버되었을 때, 호버되지 '않은' 나머지 주변 카드들 처리 */
-  .concept-images:hover .img-card-wrapper:not(:hover) {
-    filter: blur(6px) !important;       /* 조금 더 깊은 아웃포커싱 블러 적용 */
-    opacity: 0.45 !important;           /* 뒤로 멀어지는 느낌을 주기 위해 더 투명하게 처리 */
-    transform: scale(0.94) !important;  /* 크기를 살짝 줄여 공간감 확보 */
+  /* 어떤 카드가 호버되었을 때, 선택받지 못한 주변 카드들 처리 */
+  .concept-images:hover .concept-card-item:not(:hover) {
+    filter: blur(6px) !important;
+    opacity: 0.45 !important;
+    scale: 0.95 !important; /* 부드럽게 수축하며 깊이감 극대화 */
   }
 
-  /* 접근성: 사용자가 애니메이션 감축 모드일 때는 블러 및 연출을 제외하고 기본 노출 */
+  /* 접근성: 애니메이션 감축 모드 대응 */
   @media (prefers-reduced-motion: reduce) {
-    .img-card-wrapper {
+    .concept-card-item {
       filter: none !important;
-      transform: none !important;
       opacity: 1 !important;
+      scale: 1 !important;
       transition: none !important;
     }
   }
