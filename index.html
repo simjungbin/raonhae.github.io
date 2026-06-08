@@ -240,13 +240,20 @@
         </div>
     </div>
     <div class="hero-content">
-        <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">
+        <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록">
             <span class="typewriter-text"></span>
         </h1>
     </div>
 </header>
 
 <style>
+  :root {
+    /* [색상 통일] 요청하신 영롱한 민트빛 색상 정의 */
+    --mint-core: #81DBE3;
+    --mint-glow: rgba(129, 219, 227, 0.65);
+    --mint-deep-glow: rgba(129, 219, 227, 0.4);
+  }
+
   .hero {
     position: relative;
     width: 100%;
@@ -267,23 +274,18 @@
     z-index: 1;
   }
 
-  /* 좌우로 갈라질 스크린 마스크 기본 세팅 */
+  /* 좌우로 갈라질 스크린 마스크 */
   .split-screen-mask {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
-    /* 처음에는 가운데 세로 한 줄(너비 0% 영역)만 보이도록 가려둠 */
     clip-path: inset(0 50% 0 50%); 
-    
-    /* 글자 완성 후 1초 동안 웅장하게 열리도록 transition 설정 */
     transition: clip-path 1.0s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: clip-path;
   }
 
-  /* 타이핑 완료 시 스크립트로 추가될 클래스 (장막 개방) */
   .split-screen-mask.is-opened {
     clip-path: inset(0 0% 0 0%);
   }
@@ -303,7 +305,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.15); /* 영상 위 글씨 가독성 확보 */
+    background: rgba(0, 0, 0, 0.22); /* 영상 위 민트색 글씨가 더 돋보이도록 오버레이를 소폭 어둡게 조정 */
     z-index: 2;
   }
 
@@ -311,9 +313,30 @@
     position: relative;
     z-index: 3;
     text-align: center;
-    color: #fff;
-    /* 흰 배경일 땐 검은색, 영상이 열리면 흰색으로 반전 */
-    mix-blend-mode: difference; 
+  }
+
+  /* [핵심 수정] 글자색과 그림자 모두 민트빛으로 세팅 */
+  .hero-title {
+    /* 글자 색상을 요청하신 #81DBE3 민트색으로 지정 */
+    color: var(--mint-core); 
+    
+    /* 흰 배경에서도 글자가 또렷하게 읽히도록 얇은 대비용 그림자 + 넓게 퍼지는 몽환적인 그림자를 중첩 */
+    text-shadow: 
+      0 0 1px rgba(90, 180, 190, 0.5),   /* 글자 외곽선을 잡아주는 얇은 음영 */
+      0 0 8px var(--mint-glow),          /* 은은한 네온 광채 */
+      0 0 20px var(--mint-deep-glow);    /* 넓게 퍼지는 물빛 안개 효과 */
+    
+    /* 영상이 열릴 때 분위기에 맞춰 자연스럽게 발광하도록 트랜지션 부여 */
+    transition: text-shadow 0.8s ease; 
+    font-weight: 700;
+  }
+
+  /* 영상 장막이 열렸을 때 그림자 극대화 (어두운 영상 위에서 네온처럼 폭발하는 연출) */
+  #video-mask.is-opened ~ .hero-content .hero-title {
+    text-shadow: 
+      0 0 4px rgba(255, 255, 255, 0.5),  /* 비디오 위에서 글자가 맑게 뚫려 보이도록 화이트 코어 살짝 추가 */
+      0 0 12px rgba(129, 219, 227, 0.9), 
+      0 0 30px rgba(129, 219, 227, 0.6);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -334,31 +357,23 @@
     
     if (!typewriterEl || !textTarget || !mask) return;
 
-    // data-text 속성에서 출력할 전체 문장 가져오기
     const fullText = typewriterEl.getAttribute('data-text') || "";
     let currentCharIndex = 0;
-    
-    // 타이핑 속도 조절 (밀리초 단위, 숫자가 작을수록 빨라집니다)
     const typingSpeed = 90; 
 
-    // 타자기 함수 정의
     function typeEffect() {
       if (currentCharIndex < fullText.length) {
-        // 한 글자씩 추가
         textTarget.textContent += fullText.charAt(currentCharIndex);
         currentCharIndex++;
         setTimeout(typeEffect, typingSpeed);
       } else {
-        // [핵심] 글자 타이핑이 완전히 끝났을 때 발동하는 구역
         setTimeout(() => {
-          mask.classList.add('is-opened'); // 0.3초 여운을 준 후 화면 좌우로 갈라짐 시작
-        }, 300);
+          mask.classList.add('is-opened'); 
+        }, 400);
       }
     }
 
-    // 페이지 로드 후 즉시 타자기 이펙트 시작
     window.addEventListener('DOMContentLoaded', () => {
-      // 기존에 다른 자바스크립트 타자기 기능이 실행 중이라면 겹치지 않게 초기화 후 시작합니다.
       textTarget.textContent = "";
       typeEffect();
     });
