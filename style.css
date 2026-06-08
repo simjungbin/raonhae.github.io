@@ -2429,3 +2429,26 @@ a {
         right: 5%;
     }
 }
+
+/* --- Team Page Fade In --- */
+.team-hero-content.fade-in-hidden,
+.intro-quote.fade-in-hidden,
+.intro-subtext.fade-in-hidden,
+.section-divider.fade-in-hidden,
+.member-item.fade-in-hidden,
+.footer-container.fade-in-hidden {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.team-hero-content.fade-in-visible,
+.intro-quote.fade-in-visible,
+.intro-subtext.fade-in-visible,
+.section-divider.fade-in-visible,
+.member-item.fade-in-visible,
+.footer-container.fade-in-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

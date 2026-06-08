@@ -507,3 +507,23 @@ document.addEventListener("DOMContentLoaded", () => {
     cassette.addEventListener('click', togglePlay);
     if (soundBtn) soundBtn.addEventListener('click', togglePlay);
 })();
+// --- Fade In on Scroll ---
+(function () {
+    const targets = document.querySelectorAll(
+        '.team-hero-content, .intro-quote, .intro-subtext, .section-divider, .member-item, .footer-container'
+    );
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    targets.forEach(el => {
+        el.classList.add('fade-in-hidden');
+        observer.observe(el);
+    });
+})();
