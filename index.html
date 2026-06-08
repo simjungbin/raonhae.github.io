@@ -229,20 +229,115 @@
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-bg">
+    <header class="hero" id="movie-cinema-hero">
+    <div class="hero-bg">
+        <div class="cinema-screen-mask">
             <video autoplay muted loop playsinline>
                 <source src="assets/raonhea_ad.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <div class="hero-overlay"></div>
         </div>
-        <div class="hero-content">
-            <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">
-    <span class="typewriter-text"></span>
-</h1>
-        </div>
-    </header>
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title typewriter-component" id="typewriter" data-text="영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록" style="text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);">
+            <span class="typewriter-text">영원히 끝나지 않을 여름방학, 그 찬란한 유영의 기록</span>
+        </h1>
+    </div>
+</header>
+
+<style>
+  /* 효과를 테스트하기 위해 전체 스크롤 타임라인 생성 설정 */
+  html {
+    scroll-timeline: --page-scroll y;
+  }
+
+  /* 히어로 영역 스타일 (화면 고정) */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #000; /* 영상이 채워지기 전 기본 배경색 (시네마틱한 블랙) */
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  /* [핵심] 영화 스크린 마스크 레이어 */
+  .cinema-screen-mask {
+    position: absolute;
+    bottom: 0; /* 아래서부터 채워지도록 기준점을 바닥에 고정 */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    
+    /* 애니메이션 설정: 스크롤 타임라인과 연동 */
+    animation: fillVideoScreen linear both;
+    animation-timeline: --page-scroll;
+    /* 스크롤의 시작(0%)부터 화면 한 바퀴(100vh)를 내릴 때까지만 애니메이션 작동 */
+    animation-range: entry 0% exit 100vh; 
+  }
+
+  .cinema-screen-mask video {
+    position: absolute;
+    bottom: 0; /* 비디오 자체도 하단 정렬하여 잘리지 않게 고정 */
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); /* 영상이 너무 밝아 글자가 안 보이는 것을 방지 */
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #fff;
+  }
+
+  /* [스크롤 애니메이션 정의] 
+    처음(from)에는 높이가 0%였다가 스크롤을 내리면 100%로 가득 찹니다.
+  */
+  @keyframes fillVideoScreen {
+    from {
+      height: 0%;
+      opacity: 0;
+    }
+    to {
+      height: 100%;
+      opacity: 1;
+    }
+  }
+
+  /* 접근성 고려: 사용자가 애니메이션 감축을 선호하면 효과를 끄고 꽉 찬 영상 제공 */
+  @media (prefers-reduced-motion: reduce) {
+    .cinema-screen-mask {
+      height: 100% !important;
+      opacity: 1 !important;
+      animation: none !important;
+    }
+  }
+</style>
 
     <main>
         <section class="concept-section" id="concept">
