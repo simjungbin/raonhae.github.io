@@ -717,7 +717,7 @@ a {
 .footer-logo {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #111111;
+  color: #81DBE3;
   letter-spacing: -0.02em;
 }
 
@@ -747,7 +747,7 @@ a {
 
 /* 마우스 호버 시 상단 GNB와 매칭되는 블루 포인트 효과 */
 .footer-nav-item:hover {
-  color: #00B2FF;
+  color: #81DBE3;
   transform: translateY(-1px);
 }
 
