@@ -685,53 +685,92 @@ a {
     background: #6dcbd3;
 }
 
-/* Footer */
+/* -----------------------------------------
+   [Figma Design Implementation: Footer - Clean Ver.]
+----------------------------------------- */
 .footer {
-    background: var(--bg-tint);
-    backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 20px 40px;
+  width: 100%;
+  background-color: #ffffff;
+  border-top: 1px solid #f1f3f5;
+  padding: 60px 0 40px 0;
+  font-family: 'Pretendard Variable', -apple-system, sans-serif;
 }
 
 .footer-container {
-    max-width: 1440px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 소셜 링크가 빠져 균형감을 위해 중앙 정렬로 보정 */
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+/* 브랜드 서사 레이아웃 */
+.footer-left-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .footer-logo {
-    font-size: 18px;
-    color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.02em;
 }
 
 .footer-copy {
-    font-family: var(--font-body);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--primary-color);
-    opacity: 0.8;
+  font-size: 0.85rem;
+  color: #868e96;
+  line-height: 1.5;
 }
 
-.footer-links {
-    display: flex;
-    gap: 15px;
+/* 핵심 메뉴 그룹 (Story, Product, Team) */
+.footer-nav-menu .footer-links-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 40px; /* 각 메뉴 사이의 간격 */
 }
 
-.footer-links a {
-    font-family: var(--font-en);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-light);
-    text-decoration: underline;
-    transition: color 0.3s;
+.footer-nav-item {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+  display: inline-block;
 }
 
-.footer-links a:hover {
-    color: var(--primary-color);
+/* 마우스 호버 시 상단 GNB와 매칭되는 블루 포인트 효과 */
+.footer-nav-item:hover {
+  color: #00B2FF;
+  transform: translateY(-1px);
 }
 
+/* 모바일 화면 대응 */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 40px 20px;
+  }
+  
+  .footer-nav-menu {
+    width: 100%;
+    border-top: 1px solid #f1f3f5;
+    padding-top: 24px;
+  }
+  
+  .footer-nav-menu .footer-links-group {
+    flex-direction: column;
+    gap: 18px;
+  }
+}
 /* =========================================
    Team Page Specific Styles
    ========================================= */
