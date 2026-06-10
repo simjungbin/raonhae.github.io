@@ -391,42 +391,38 @@ a {
 
 /* Solution Section */
 .solution-section {
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  padding: 100px 24px !important;
-  
-  /* 어떤 방해 코드가 있든 무조건 가로 2단 분할 레이아웃 적용 */
-  display: flex !important;             
-  flex-direction: row !important;       
-  align-items: center !important;       
-  justify-content: space-between !important; 
-  gap: 60px !important;                 /* 이미지와 텍스트 사이 정교한 여백 */
+    max-width: 1280px;
+    margin: 200px auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 64px;
 }
 
-/* 왼쪽 이미지 영역 정밀 고정 */
 .solution-image-wrapper {
-  flex: 1 !important;                   
-  max-width: 50% !important;
-  width: 50% !important;
-  overflow: hidden !important;
-  display: flex !important;
+    position: relative;
+    width: 50%;
+    height: 600px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .solution-image-wrapper img {
-  width: 100% !important;
-  height: auto !important;
-  object-fit: cover !important;         
-  display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* 오른쪽 텍스트 영역 정밀 고정 */
 .solution-text {
-  flex: 1 !important;                   
-  max-width: 50% !important;
-  width: 50% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  /* 💡 타이포 속성(color, font 등)은 적지 않아 기존 스타일이 그대로 유지됩니다. */
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: flex-start;
 }
 
 .solution-header {
