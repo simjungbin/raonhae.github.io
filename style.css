@@ -391,62 +391,88 @@ a {
 
 /* Solution Section */
 .solution-section {
-    max-width: 1280px;
-    margin: 200px auto;
-    padding: 0 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 64px;
+  max-width: 1200px;         /* 전체 사이트 컨테이너 너비와 일치 */
+  margin: 0 auto;            /* 중앙 정렬 */
+  padding: 100px 24px;       /* 위아래 충분한 섹션 간격 확보 */
+  
+  display: flex;             /* 💡 핵심: 자식 요소들을 가로로 나란히 배치 */
+  flex-direction: row;       /* 가로 정렬 고정 */
+  align-items: center;       /* 이미지와 텍스트의 세로 중앙축을 일치시킴 */
+  justify-content: space-between; /* 양 끝으로 균일하게 밀착 */
+  gap: 80px;                 /* 💡 이미지와 우측 텍스트 사이의 정교한 간격 */
 }
 
+/* 왼쪽 이미지 감싸는 박스 (50% 영역 차지) */
 .solution-image-wrapper {
-    position: relative;
-    width: 50%;
-    height: 600px;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  flex: 1;                   /* 좌우 균등 분할 */
+  max-width: 50%;
+  border-radius: 0px;        /* 시안처럼 칼 같은 직각 마감 (원하면 8px 등으로 조절 가능) */
+  overflow: hidden;
+  display: flex;
 }
 
+/* 이미지 자체 스펙 */
 .solution-image-wrapper img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: cover;         /* 비율 유지하며 박스에 꽉 채우기 */
+  display: block;
 }
 
+/* 오른쪽 텍스트 구역 (50% 영역 차지) */
 .solution-text {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    align-items: flex-start;
+  flex: 1;                   /* 좌우 균등 분할 */
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;                 /* 타이틀과 본문 사이의 세로 여백 */
 }
 
 .solution-header {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                 /* Solution 라벨과 메인 타이틀 사이 간격 */
 }
 
 .solution-label {
-    font-family: var(--font-heading);
-    font-size: 16px;
-    color: var(--text-dark);
-    letter-spacing: -0.32px;
-    line-height: 1.2;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00B2FF;            /* 라온해 시그니처 시안 블루 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .solution-text h2 {
-    font-size: 36px;
-    color: var(--text-dark);
-    letter-spacing: -0.72px;
-    line-height: 1.2;
-    margin-bottom: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
 
+.solution-description {
+  font-size: 1.05rem;
+  color: #495057;            /* 본문 가독성을 높이는 차분한 소프트 블랙 */
+  line-height: 1.75;         /* 행간을 여유롭게 주어 아날로그한 감성 극대화 */
+}
+
+/* 📱 모바일 환경 반응형 대응: 화면이 좁아지면 세로로 안전하게 스택 */
+@media (max-width: 968px) {
+  .solution-section {
+    flex-direction: column;  /* 모바일에서는 위 이미지, 아래 텍스트 정렬 */
+    gap: 40px;
+    padding: 60px 20px;
+  }
+  
+  .solution-image-wrapper,
+  .solution-text {
+    max-width: 100%;         /* 모바일에서는 꽉 차게 변경 */
+  }
+  
+  .solution-text h2 {
+    font-size: 1.8rem;       /* 모바일 타이틀 크기 최적화 */
+  }
+}
 .solution-description {
     font-family: var(--font-body);
     font-weight: 400;
