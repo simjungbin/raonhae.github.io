@@ -542,3 +542,25 @@ document.addEventListener("DOMContentLoaded", () => {
         arrow.style.strokeDashoffset = '0';
     }, 800);
 })();
+document.addEventListener("DOMContentLoaded", () => {
+
+    const target = document.querySelector(".analog-bg");
+
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("video-revealed");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.3
+        }
+    );
+
+    observer.observe(target);
+});

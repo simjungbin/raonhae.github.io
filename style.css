@@ -2511,3 +2511,26 @@ a {
 .cassette-container:hover .orbit-container {
     transform: translate(-50%, -50%) scale(1.02);
 }
+.analog-bg {
+    overflow: hidden;
+}
+
+.analog-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(100px) scale(1.1);
+
+    transition:
+        clip-path 2s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 2s cubic-bezier(0.22, 1, 0.36, 1);
+
+    will-change: clip-path, transform;
+}
+
+.analog-bg.video-revealed video {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0) scale(1);
+}
