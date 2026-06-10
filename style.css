@@ -686,7 +686,7 @@ a {
 }
 
 /* -----------------------------------------
-   [Figma Design Implementation: Footer - Clean Ver.]
+   [Figma Design Implementation: Footer - Horizontal Brand Line]
 ----------------------------------------- */
 .footer {
   width: 100%;
@@ -702,29 +702,32 @@ a {
   padding: 0 24px;
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 소셜 링크가 빠져 균형감을 위해 중앙 정렬로 보정 */
+  /* 중요: 좌측 브랜드 라인과 우측 메뉴 라인의 세로 중심축을 칼같이 일치시킵니다 */
+  align-items: center; 
   flex-wrap: wrap;
   gap: 32px;
 }
 
-/* 브랜드 서사 레이아웃 */
+/* [핵심 수정] 로고와 카피라이트를 피그마 시안처럼 가로로 나란히 배치 */
 .footer-left-brand {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;  /* 세로(column)에서 가로(row) 정렬로 전면 수정 */
+  align-items: center;  /* 로고와 텍스트의 높낮이를 완벽하게 수평 정렬 */
+  gap: 24px;            /* 로고와 카피라이트 문구 사이의 정교한 간격 */
 }
 
 .footer-logo {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #81DBE3;
+  color: #81DBE3;       /* 캡처 화면 속 맑은 시안 블루 아이덴티티 반영 */
   letter-spacing: -0.02em;
+  line-height: 1;       /* 여백 밀림 방지 */
 }
 
 .footer-copy {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: #868e96;
-  line-height: 1.5;
+  line-height: 1;       /* 로고와 수평 높이를 맞추기 위해 1로 고정 */
 }
 
 /* 핵심 메뉴 그룹 (Story, Product, Team) */
@@ -733,7 +736,7 @@ a {
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 40px; /* 각 메뉴 사이의 간격 */
+  gap: 40px;
 }
 
 .footer-nav-item {
@@ -745,19 +748,24 @@ a {
   display: inline-block;
 }
 
-/* 마우스 호버 시 상단 GNB와 매칭되는 블루 포인트 효과 */
 .footer-nav-item:hover {
   color: #81DBE3;
   transform: translateY(-1px);
 }
 
-/* 모바일 화면 대응 */
+/* 모바일 화면 대응 (화면이 좁아지면 가독성을 위해 세로로 자연스럽게 흐르게 변경) */
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
     padding: 40px 20px;
+  }
+  
+  .footer-left-brand {
+    flex-direction: column; /* 모바일에서는 다시 세로 정렬로 안전하게 스택 */
+    align-items: flex-start;
+    gap: 8px;
   }
   
   .footer-nav-menu {
